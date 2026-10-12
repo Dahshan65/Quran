@@ -1,20 +1,668 @@
 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مسابقة حفظ القرآن الكريم</title>
+<style>
+:root {
+  --green: #075b42;
+  --deep: #043c2d;
+  --gold: #d8b45a;
+  --cream: #fffaf0;
+  --red: #a52a2a;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Tahoma, Arial, sans-serif;
+  background: linear-gradient(145deg, #e7f1e9, #fff8e8);
+  color: #173b2e;
+  min-height: 100vh;
+}
+header {
+  background: var(--deep);
+  color: white;
+  text-align: center;
+  padding: 24px 12px;
+  border-bottom: 5px solid var(--gold);
+}
+header h1 { margin: 0 0 10px; font-size: 27px; }
+header p { margin: 6px 0; }
+main {
+  max-width: 850px;
+  margin: 24px auto;
+  padding: 0 14px 30px;
+}
+.panel {
+  background: white;
+  border: 1px solid #dfd2a8;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 6px 20px #12351b12;
+  margin-bottom: 18px;
+}
+h2 { color: var(--green); margin-top: 0; }
+button {
+  font-family: inherit;
+  font-size: 16px;
+  border: 0;
+  border-radius: 10px;
+  padding: 13px 17px;
+  cursor: pointer;
+  transition: .2s;
+}
+button:hover { filter: brightness(1.07); }
+.primary {
+  background: var(--green);
+  color: white;
+}
+.gold {
+  background: var(--gold);
+  color: #30250c;
+}
+.secondary {
+  background: #e8f1e9;
+  color: var(--deep);
+  border: 1px solid #b9d0c1;
+}
+button:disabled { opacity: .5; cursor: not-allowed; }
+.menu-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+.hidden { display: none !important; }
+.info {
+  background: #f5f1df;
+  border-right: 4px solid var(--gold);
+  padding: 12px;
+  border-radius: 8px;
+  line-height: 1.9;
+}
+.progress-wrap {
+  height: 10px;
+  background: #e4e9e4;
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 14px 0;
+}
+#progressBar {
+  width: 0;
+  height: 100%;
+  background: var(--gold);
+  transition: width .25s;
+}
+.meta {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: #52645a;
+  font-size: 14px;
+}
+#questionText {
+  font-size: 23px;
+  line-height: 1.9;
+  margin: 22px 0;
+}
+.options {
+  display: grid;
+  gap: 10px;
+}
+.option {
+  background: #f8faf7;
+  color: #173b2e;
+  border: 1px solid #cad8ce;
+  text-align: right;
+  line-height: 1.7;
+}
+.option.correct {
+  background: #d8f3df;
+  border-color: #29934d;
+}
+.option.wrong {
+  background: #fbe1e1;
+  border-color: #c44;
+}
+#feedback {
+  margin-top: 14px;
+  font-weight: bold;
+  line-height: 1.8;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+.center { text-align: center; }
+.big-score {
+  font-size: 34px;
+  font-weight: bold;
+  color: var(--green);
+}
+.good { color: #14713d; }
+.bad { color: var(--red); }
+.stage-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 8px;
+}
+.stage-chip {
+  background: #edf3ed;
+  padding: 10px;
+  text-align: center;
+  border-radius: 8px;
+  font-size: 13px;
+}
+.stage-chip.active {
+  background: var(--green);
+  color: white;
+}
+footer {
+  text-align: center;
+  padding: 18px;
+  color: #66746b;
+  font-size: 14px;
+}
+@media(max-width: 500px) {
+  header h1 { font-size: 22px; }
+  #questionText { font-size: 20px; }
+  .panel { padding: 16px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>﷽</h1>
+  <h1>مسابقة حفظ القرآن الكريم</h1>
+  <p>اختبر حفظك، وراجع معلوماتك، وواصل طريق الإتقان</p>
+</header>
+
+<main>
+  <section id="home" class="panel">
+    <h2>أهلًا بك في المسابقة</h2>
+    <p>اختر نوع الاختبار، وأجب عن الأسئلة بالترتيب.</p>
+    <div class="info">
+      <strong>نظام المراحل:</strong><br>
+      • كل مرحلة تتكون من 10 أسئلة.<br>
+      • تظهر النتيجة بعد كل مرحلة.<br>
+      • يلزم الحصول على أكثر من 70% للانتقال.<br>
+      • إذا كانت النتيجة 70% أو أقل، أعد المرحلة واستمر في الحفظ.
+    </div>
+    <br>
+    <div class="menu-buttons">
+      <button class="primary" onclick="startQuiz('quran')">
+        اختبار حفظ القرآن الكريم
+      </button>
+      <button class="gold" onclick="startQuiz('tajweed')">
+        اختبار علم التجويد
+      </button>
+    </div>
+    <p class="info" style="margin-top:18px">
+      إعداد وبرمجة: <strong>وائل دهشان</strong>
+    </p>
+  </section>
+
+  <section id="quiz" class="panel hidden">
+    <div class="meta">
+      <span id="categoryLabel"></span>
+      <span id="questionCounter"></span>
+    </div>
+    <div class="progress-wrap">
+      <div id="progressBar"></div>
+    </div>
+    <div id="stageGrid" class="stage-grid"></div>
+    <h2 id="stageTitle"></h2>
+    <div id="questionText"></div>
+    <div id="options" class="options"></div>
+    <div id="feedback"></div>
+    <div class="actions">
+      <button id="nextButton" class="primary" onclick="nextQuestion()" disabled>
+        السؤال التالي
+      </button>
+      <button class="secondary" onclick="goHome()">القائمة الرئيسية</button>
+    </div>
+  </section>
+
+  <section id="stageResult" class="panel hidden center">
+    <h2 id="stageResultTitle">نتيجة المرحلة</h2>
+    <p class="big-score" id="stageResultScore"></p>
+    <h2 id="stageResultText"></h2>
+    <p id="stageResultDetails"></p>
+    <div class="actions" style="justify-content:center">
+      <button id="continueButton" class="primary" onclick="continueAfterStage()">
+        متابعة
+      </button>
+      <button class="secondary" onclick="goHome()">القائمة الرئيسية</button>
+    </div>
+  </section>
+
+  <section id="finalResult" class="panel hidden center">
+    <h2>النتيجة النهائية</h2>
+    <p>أتممت جميع أسئلة الاختبار.</p>
+    <p id="finalScore" class="big-score"></p>
+    <p id="finalMessage"></p>
+    <button class="primary" onclick="goHome()">العودة إلى الرئيسية</button>
+  </section>
+</main>
+
+<footer>
+  مسابقة تعليمية للمراجعة والتدريب — إعداد وبرمجة: وائل دهشان
+</footer>
+
+<script>
+"use strict";
+
+/*
+  بنك الأسئلة الحالي نموذج أولي قابل للتوسعة.
+  راجع النصوص القرآنية والأحكام العلمية قبل اعتماد نسخة للنشر.
+*/
+
+const questionBanks = {
+  quran: [
+    {
+      q: "ما السورة التي تبدأ بقوله تعالى: «الحمد لله رب العالمين»؟",
+      options: ["الفاتحة", "البقرة", "الأنعام", "الكهف"],
+      answer: 0
+    },
+    {
+      q: "في أي سورة وردت آية الكرسي؟",
+      options: ["آل عمران", "البقرة", "النساء", "المائدة"],
+      answer: 1
+    },
+    {
+      q: "ما السورة التي لا تبدأ بالبسملة؟",
+      options: ["الأنفال", "يونس", "التوبة", "هود"],
+      answer: 2
+    },
+    {
+      q: "ما السورة التي ورد فيها ذكر غزوة بدر صراحة في سياق أحداثها؟",
+      options: ["الأنفال", "مريم", "الرحمن", "الملك"],
+      answer: 0
+    },
+    {
+      q: "ما السورة التي تُسمّى أيضًا بني إسرائيل؟",
+      options: ["الإسراء", "القصص", "النمل", "الرعد"],
+      answer: 0
+    },
+    {
+      q: "في أي سورة وردت قصة أصحاب الكهف؟",
+      options: ["طه", "الكهف", "مريم", "الأنبياء"],
+      answer: 1
+    },
+    {
+      q: "ما السورة التي تبدأ بقوله تعالى: «الرَّحْمَٰنُ»؟",
+      options: ["الواقعة", "الرحمن", "الحديد", "الملك"],
+      answer: 1
+    },
+    {
+      q: "في أي سورة وردت قصة ذي القرنين؟",
+      options: ["الكهف", "يس", "القصص", "سبأ"],
+      answer: 0
+    },
+    {
+      q: "ما السورة التي ورد فيها ذكر ليلة القدر؟",
+      options: ["العلق", "القدر", "الفجر", "الضحى"],
+      answer: 1
+    },
+    {
+      q: "ما السورة التي تُختتم بقوله تعالى: «مِنَ الْجِنَّةِ وَالنَّاسِ»؟",
+      options: ["الفلق", "الإخلاص", "الناس", "الكافرون"],
+      answer: 2
+    },
+
+    {
+      q: "ما السورة التي تبدأ بالحروف المقطعة «كهيعص»؟",
+      options: ["مريم", "طه", "يس", "ص"],
+      answer: 0
+    },
+    {
+      q: "في أي سورة وردت قصة أصحاب الأخدود؟",
+      options: ["البروج", "الطارق", "البلد", "الشمس"],
+      answer: 0
+    },
+    {
+      q: "ما السورة التي ورد فيها قوله تعالى: «وَقُلْ رَبِّ زِدْنِي عِلْمًا»؟",
+      options: ["طه", "الأنبياء", "العلق", "الزمر"],
+      answer: 0
+    },
+    {
+      q: "ما السورة التي ورد فيها ذكر طالوت وجالوت؟",
+      options: ["البقرة", "الأعراف", "الأنفال", "يونس"],
+      answer: 0
+    },
+    {
+      q: "في أي سورة وردت قصة أصحاب الجنة الذين أقسموا ليصرمنها مصبحين؟",
+      options: ["القلم", "الواقعة", "الحاقة", "المعارج"],
+      answer: 0
+    },
+    {
+      q: "ما السورة التي تبدأ بقوله تعالى: «عَمَّ يَتَسَاءَلُونَ»؟",
+      options: ["النازعات", "عبس", "النبأ", "التكوير"],
+      answer: 2
+    },
+    {
+      q: "في أي سورة وردت قصة قارون مفصلة؟",
+      options: ["القصص", "يوسف", "النمل", "الفتح"],
+      answer: 0
+    },
+    {
+      q: "ما السورة التي ورد فيها قوله تعالى: «إِنَّ مَعَ الْعُسْرِ يُسْرًا»؟",
+      options: ["الضحى", "الشرح", "التين", "العلق"],
+      answer: 1
+    },
+    {
+      q: "ما السورة التي تبدأ بقوله تعالى: «تَبَارَكَ الَّذِي بِيَدِهِ الْمُلْكُ»؟",
+      options: ["الملك", "القلم", "الواقعة", "الحديد"],
+      answer: 0
+    },
+    {
+      q: "ما السورة التي ورد فيها ذكر أصحاب الفيل؟",
+      options: ["قريش", "الفيل", "الماعون", "الهمزة"],
+      answer: 1
+    },
+
+    {
+      q: "ما السورة التي وردت فيها البسملة مرتين؟",
+      options: ["النمل", "التوبة", "القصص", "النحل"],
+      answer: 0
+    },
+    {
+      q: "في أي سورة وردت قصة أصحاب السبت؟",
+      options: ["الأعراف", "الفتح", "الصف", "الجمعة"],
+      answer: 0
+    },
+    {
+      q: "ما السورة التي ورد فيها ذكر تحويل القبلة؟",
+      options: ["البقرة", "آل عمران", "النساء", "المائدة"],
+      answer: 0
+    },
+    {
+      q: "في أي سورة وردت قصة الهدهد مع سليمان عليه السلام؟",
+      options: ["سبأ", "النمل", "ص", "الأنبياء"],
+      answer: 1
+    },
+    {
+      q: "ما السورة التي ورد فيها دعاء زكريا عليه السلام بطلب الذرية؟",
+      options: ["مريم", "يوسف", "الرعد", "إبراهيم"],
+      answer: 0
+    },
+    {
+      q: "ما السورة التي تبدأ بقوله تعالى: «قَدْ أَفْلَحَ الْمُؤْمِنُونَ»؟",
+      options: ["المؤمنون", "المنافقون", "المجادلة", "الصف"],
+      answer: 0
+    },
+    {
+      q: "في أي سورة وردت قصة أصحاب القرية والمرسلين؟",
+      options: ["يس", "الرحمن", "الدخان", "الزخرف"],
+      answer: 0
+    },
+    {
+      q: "ما السورة التي تبدأ بقوله تعالى: «سَبِّحِ اسْمَ رَبِّكَ الْأَعْلَى»؟",
+      options: ["الغاشية", "الأعلى", "الفجر", "الليل"],
+      answer: 1
+    },
+    {
+      q: "ما السورة التي ورد فيها ذكر لقمان ووصاياه لابنه؟",
+      options: ["السجدة", "لقمان", "الروم", "العنكبوت"],
+      answer: 1
+    },
+    {
+      q: "ما السورة التي تبدأ بقوله تعالى: «وَالْعَصْرِ»؟",
+      options: ["التكاثر", "العصر", "الهمزة", "القارعة"],
+      answer: 1
+    }
+  ],
+
+  tajweed: [
+    {
+      q: "كم عدد أحرف الإظهار الحلقي؟",
+      options: ["أربعة", "خمسة", "ستة", "سبعة"],
+      answer: 2
+    },
+    {
+      q: "ما أحرف الإدغام بغنة؟",
+      options: ["يرملون", "ينمو", "قطب جد", "خص ضغط قظ"],
+      answer: 1
+    },
+    {
+      q: "ما حكم النون الساكنة إذا جاء بعدها حرف الباء؟",
+      options: ["إظهار", "إقلاب", "إدغام", "إخفاء"],
+      answer: 1
+    },
+    {
+      q: "ما أحرف القلقلة؟",
+      options: ["قطب جد", "يرملون", "ء هـ ع ح غ خ", "ص ذ ث ك ج ش"],
+      answer: 0
+    },
+    {
+      q: "كم عدد أحرف الإخفاء الحقيقي؟",
+      options: ["10", "12", "15", "17"],
+      answer: 2
+    },
+    {
+      q: "ما حكم الميم الساكنة إذا جاء بعدها حرف الميم؟",
+      options: ["إظهار شفوي", "إدغام شفوي", "إخفاء شفوي", "إقلاب"],
+      answer: 1
+    },
+    {
+      q: "ما مقدار المد الطبيعي؟",
+      options: ["حركة واحدة", "حركتان", "أربع حركات", "ست حركات"],
+      answer: 1
+    },
+    {
+      q: "أي حرف من حروف المد لا يكون قبله إلا حركة تناسبه؟",
+      options: ["الألف والواو والياء", "الهمزة فقط", "النون والميم", "اللام والراء"],
+      answer: 0
+    },
+    {
+      q: "ما حكم النون الساكنة في «مِنْ بَعْدِ»؟",
+      options: ["إظهار حلقي", "إقلاب", "إدغام بغير غنة", "إخفاء"],
+      answer: 1
+    },
+    {
+      q: "أي مجموعة تمثل حروف الإدغام بغير غنة؟",
+      options: ["ينمو", "ل، ر", "ء، هـ، ع، ح، غ، خ", "ق، ط، ب، ج، د"],
+      answer: 1
+    }
+  ]
+};
+
+const $ = id => document.getElementById(id);
+
+let mode = "quran";
+let questions = [];
+let index = 0;
+let stage = 0;
+let stageCorrect = 0;
+let lastStageScore = 0;
+let totalCorrect = 0;
+let answered = false;
+let lastStageFinished = false;
+let stageResults = [];
+let optionOrder = [];
+
+function shuffle(array) {
+  const result = [...array];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
+function show(id) {
+  ["home", "quiz", "stageResult", "finalResult"].forEach(section => {
+    $(section).classList.toggle("hidden", section !== id);
+  });
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function goHome() {
+  show("home");
+}
+
+function startQuiz(selectedMode) {
+  mode = selectedMode;
+  questions = shuffle(questionBanks[mode]);
+  index = 0;
+  stage = 0;
+  stageCorrect = 0;
+  lastStageScore = 0;
+  totalCorrect = 0;
+  answered = false;
+  lastStageFinished = false;
+  stageResults = [];
+
+  $("categoryLabel").textContent =
+    mode === "quran" ? "اختبار حفظ القرآن الكريم" : "اختبار علم التجويد";
+
+  renderStages();
+  show("quiz");
+  renderQuestion();
+}
+
+function stageCount() {
+  return Math.ceil(questions.length / 10);
+}
+
+function stageStartIndex() {
+  return stage * 10;
+}
+
+function stageEndIndex() {
+  return Math.min(stageStartIndex() + 10, questions.length);
+}
+
+function renderStages() {
+  const total = stageCount();
+  $("stageGrid").innerHTML = "";
+
+  for (let i = 0; i < total; i++) {
+    const chip = document.createElement("div");
+    chip.className = "stage-chip" + (i === stage ? " active" : "");
+    chip.textContent = "المرحلة " + (i + 1);
+    $("stageGrid").appendChild(chip);
+  }
+
+  $("stageTitle").textContent =
+    "المرحلة " + (stage + 1) + " من " + total;
+}
+
+function renderQuestion() {
+  if (index >= questions.length) {
+    showFinal();
+    return;
+  }
+
+  answered = false;
+  const q = questions[index];
+
+  $("questionCounter").textContent =
+    "السؤال " + (index + 1) + " من " + questions.length;
+
+  $("progressBar").style.width =
+    ((index + 1) / questions.length * 100) + "%";
+
+  $("questionText").textContent = q.q;
+  $("feedback").textContent = "";
+  $("options").innerHTML = "";
+
+  $("nextButton").disabled = true;
+  $("nextButton").textContent =
+    index === stageEndIndex() - 1
+      ? "عرض نتيجة المرحلة"
+      : "السؤال التالي";
+
+  optionOrder = shuffle(q.options.map((text, originalIndex) => ({
+    text,
+    originalIndex
+  })));
+
+  optionOrder.forEach(option => {
+    const btn = document.createElement("button");
+    btn.className = "option";
+    btn.textContent = option.text;
+    btn.onclick = () => chooseAnswer(btn, option.originalIndex, q.answer);
+    $("options").appendChild(btn);
+  });
+
+  renderStages();
+}
+
+function chooseAnswer(button, selected, correct) {
+  if (answered) return;
+  answered = true;
+
+  const buttons = [...$("options").querySelectorAll("button")];
+  buttons.forEach(btn => btn.disabled = true);
+
+  const correctButton = buttons.find(btn => {
+    const option = optionOrder[buttons.indexOf(btn)];
+    return option.originalIndex === correct;
+  });
+
+  if (selected === correct) {
+    stageCorrect++;
+    totalCorrect++;
+    button.classList.add("correct");
+    $("feedback").textContent = "إجابة صحيحة، أحسنت!";
+    $("feedback").className = "good";
+  } else {
+    button.classList.add("wrong");
+    if (correctButton) correctButton.classList.add("correct");
+    $("feedback").textContent =
+      "إجابة غير صحيحة. الإجابة الصحيحة: " +
+      questions[index].options[correct];
+    $("feedback").className = "bad";
+  }
+
+  $("nextButton").disabled = false;
+}
+
+function nextQuestion() {
+  if (!answered) return;
+
+  const end = stageEndIndex();
+
+  if (index === end - 1) {
+    lastStageScore = stageCorrect;
+    lastStageFinished = true;
+    stageResults[stage] = stageCorrect;
+    showStageResult();
+    return;
+  }
+
+  index++;
+  renderQuestion();
+}
+
 function showStageResult() {
-  const start = stage * 10 + 1;
-  const end = Math.min((stage + 1) * 10, questions.length);
-  const count = end - start + 1;
+  const start = stageStartIndex();
+  const end = stageEndIndex();
+  const count = end - start;
   const percentage = Math.round((lastStageScore / count) * 100);
   const passed = percentage > 70;
 
   $("stageResultTitle").textContent =
-    `نتيجة المرحلة ${stage + 1}`;
+    "نتيجة المرحلة " + (stage + 1);
 
   $("stageResultScore").textContent =
-    `${lastStageScore} / ${count} (${percentage}%)`;
+    lastStageScore + " / " + count + " (" + percentage + "%)";
 
   $("stageResultText").textContent = passed
     ? "أحسنت، بارك الله فيك"
     : "أعد المحاولة واستمر في الحفظ";
+
+  $("stageResultText").className = passed ? "good" : "bad";
+
+  $("stageResultDetails").textContent = passed
+    ? "لقد تجاوزت نسبة النجاح المطلوبة."
+    : "يجب أن تحصل على أكثر من 70% للانتقال إلى المرحلة التالية.";
 
   $("continueButton").textContent = passed
     ? (end >= questions.length
@@ -30,18 +678,18 @@ function showStageResult() {
 }
 
 function retryStage() {
-  // إعادة أسئلة المرحلة الحالية فقط
-  const start = stage * 10;
-  const end = Math.min(start + 10, questions.length);
+  const start = stageStartIndex();
+  const end = stageEndIndex();
 
-  questions.splice(start, end - start, ...shuffle(questions.slice(start, end)));
+  // نعيد ترتيب أسئلة المرحلة نفسها دون تكرارها أو تغيير محتواها.
+  const retryQuestions = shuffle(questions.slice(start, end));
+  questions.splice(start, end - start, ...retryQuestions);
 
   index = start;
   stageCorrect = 0;
   lastStageScore = 0;
+  answered = false;
   lastStageFinished = false;
-
-  $("nextButton").dataset.answered = "no";
 
   renderStages();
   show("quiz");
@@ -51,27 +699,48 @@ function retryStage() {
 function continueAfterStage() {
   if (!lastStageFinished) return;
 
-  const count = Math.min((stage + 1) * 10, questions.length);
-  const percentage = Math.round((lastStageScore / (count - stage * 10)) * 100);
+  const start = stageStartIndex();
+  const end = stageEndIndex();
+  const count = end - start;
+  const percentage = Math.round((lastStageScore / count) * 100);
 
-  // لا انتقال إلى المرحلة التالية دون تجاوز 70%
   if (percentage <= 70) {
     retryStage();
     return;
   }
 
-  if (index + 1 >= questions.length) {
+  if (end >= questions.length) {
     showFinal();
     return;
   }
 
-  index++;
-  stage = Math.floor(index / 10);
+  index = end;
+  stage++;
   stageCorrect = 0;
-  stageStart = index;
+  lastStageScore = 0;
+  answered = false;
   lastStageFinished = false;
 
   renderStages();
   show("quiz");
   renderQuestion();
 }
+
+function showFinal() {
+  const percentage = questions.length
+    ? Math.round((totalCorrect / questions.length) * 100)
+    : 0;
+
+  $("finalScore").textContent =
+    totalCorrect + " / " + questions.length + " (" + percentage + "%)";
+
+  $("finalMessage").textContent = percentage > 70
+    ? "أحسنت، بارك الله فيك. واصل المراجعة والتثبيت."
+    : "استمر في الحفظ والمراجعة، فبالمثابرة يتحقق الإتقان.";
+
+  show("finalResult");
+}
+</script>
+</body>
+</html>
+
