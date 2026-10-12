@@ -1,423 +1,64 @@
 
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#123d2b">
-<title>مسابقة حفظ القرآن الكريم | وائل دهشان</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;background:#f7f3e7;color:#23382c;font-family:Tahoma,Arial,sans-serif}
-header{background:linear-gradient(135deg,#0b2d20,#216344);color:white;text-align:center;padding:28px 14px;border-bottom:5px solid #d8b45b}
-header h1{font-size:27px;margin:8px 0}
-header p{line-height:1.8}
-.ornament{color:#e4c66e;font-size:25px}
-main{max-width:800px;margin:24px auto;padding:0 14px}
-.panel{background:white;border:1px solid #e5ddc8;border-radius:17px;padding:22px;margin-bottom:18px;box-shadow:0 5px 18px #123d2b0c}
-h2{color:#16452f;margin-top:0}
-.muted{color:#657267;line-height:1.9}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
-button{font:inherit;cursor:pointer;border:0;border-radius:11px;padding:13px 15px;line-height:1.8}
-button:disabled{cursor:default;opacity:.75}
-.contest{background:#123d2b;color:white;border:2px solid #d8b45b;min-height:100px;font-weight:bold}
-.contest small{display:block;color:#f2d995;font-weight:normal}
-.hidden{display:none!important}
-.stage-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin:15px 0}
-.stage{padding:9px 3px;background:#e9e7dc;color:#33473a;font-size:13px}
-.stage.active{background:#d8b45b;color:#20291e;font-weight:bold}
-.stage.done{background:#d9eee0;color:#15522d}
-.topline{display:flex;justify-content:space-between;gap:9px;flex-wrap:wrap;font-size:14px;color:#5e6d61;margin-bottom:13px}
-.progress{height:8px;background:#e7e7dd;border-radius:20px;overflow:hidden;margin-bottom:20px}
-.bar{height:100%;width:0;background:#d8b45b;transition:width .2s}
-.question{font-size:21px;font-weight:bold;line-height:2;margin:18px 0;color:#173e2a}
-.options{display:grid;gap:10px}
-.option{text-align:right;background:#fbfaf5;border:1px solid #dedccc;color:#273a2d}
-.option.correct{background:#dff1e3;border:2px solid #27824a}
-.option.wrong{background:#fbe5e3;border:2px solid #c54d43}
-.feedback{margin-top:14px;padding:12px;border-radius:10px;line-height:1.9}
-.good{background:#e0f3e5;color:#14552c}
-.bad{background:#fff0df;color:#764719}
-.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
-.primary{background:#123d2b;color:white}
-.secondary{background:#e9e4d5;color:#26372b}
-.gold{background:#d8b45b;color:#292516}
-.result{text-align:center;line-height:2}
-.score{font-size:38px;font-weight:bold;color:#16452f;margin:15px}
-footer{text-align:center;padding:22px;color:#68766b;font-size:13px;line-height:2}
-@media(max-width:520px){.grid{grid-template-columns:1fr}.question{font-size:19px}.panel{padding:16px}.stage-list{gap:4px}.stage{font-size:11px;padding:8px 1px}}
-</style>
-</head>
-<body>
-<header>
-  <div class="ornament">۞ ﷽ ۞</div>
-  <h1>مسابقة حفظ القرآن الكريم</h1>
-  <p>اختبار الحفظ والإتقان في كتاب الله تعالى</p>
-  <div class="ornament">❁ ❁ ❁</div>
-</header>
+function showStageResult() {
+  const start = stage * 10 + 1;
+  const end = Math.min((stage + 1) * 10, questions.length);
+  const count = end - start + 1;
+  const percentage = Math.round((lastStageScore / count) * 100);
+  const passed = percentage > 70;
 
-<main>
-  <section id="home" class="panel">
-    <h2>اختر المسابقة</h2>
-    <p class="muted">أجب عن الأسئلة بالترتيب. كل مرحلة تتكون من 10 أسئلة، وتظهر نتيجتها قبل الانتقال إلى المرحلة التالية.</p>
-    <div class="grid">
-      <button class="contest" onclick="startQuiz('amma')">
-        مسابقة جزء عمّ
-        <small>5 مراحل × 10 أسئلة مستهدفة</small>
-      </button>
-      <button class="contest" onclick="startQuiz('baqarah')">
-        مسابقة سورة البقرة
-        <small>10 مراحل × 10 أسئلة مستهدفة</small>
-      </button>
-    </div>
-    <p class="muted">إعداد وبرمجة: وائل دهشان</p>
-  </section>
+  $("stageResultTitle").textContent =
+    `نتيجة المرحلة ${stage + 1}`;
 
-  <section id="quiz" class="panel hidden">
-    <div class="topline">
-      <span id="contestName"></span>
-      <span id="stageCounter"></span>
-      <span id="scoreCounter"></span>
-    </div>
-    <div id="stageList" class="stage-list"></div>
-    <div class="topline">
-      <span id="questionCounter"></span>
-      <span id="stageScore"></span>
-    </div>
-    <div class="progress"><div id="bar" class="bar"></div></div>
-    <div id="questionText" class="question"></div>
-    <div id="options" class="options"></div>
-    <div id="feedback" class="feedback hidden"></div>
-    <div class="actions">
-      <button id="nextButton" class="primary hidden" onclick="nextQuestion()">السؤال التالي</button>
-      <button class="secondary" onclick="goHome()">العودة للرئيسية</button>
-    </div>
-  </section>
+  $("stageResultScore").textContent =
+    `${lastStageScore} / ${count} (${percentage}%)`;
 
-  <section id="stageResult" class="panel hidden result">
-    <h2 id="stageResultTitle">نتيجة المرحلة</h2>
-    <div id="stageResultScore" class="score"></div>
-    <p id="stageResultText"></p>
-    <div class="actions" style="justify-content:center">
-      <button id="continueButton" class="primary" onclick="continueAfterStage()">المرحلة التالية</button>
-      <button class="secondary" onclick="goHome()">الرئيسية</button>
-    </div>
-  </section>
+  $("stageResultText").textContent = passed
+    ? "أحسنت، بارك الله فيك"
+    : "أعد المحاولة واستمر في الحفظ";
 
-  <section id="finalResult" class="panel hidden result">
-    <h2>النتيجة النهائية</h2>
-    <div id="finalScore" class="score"></div>
-    <p id="finalText"></p>
-    <div class="actions" style="justify-content:center">
-      <button class="primary" onclick="restartQuiz()">إعادة المسابقة</button>
-      <button class="secondary" onclick="goHome()">الرئيسية</button>
-    </div>
-  </section>
-</main>
+  $("continueButton").textContent = passed
+    ? (end >= questions.length
+        ? "عرض النتيجة النهائية"
+        : "الانتقال إلى المرحلة التالية")
+    : "إعادة المرحلة";
 
-<footer>
-  ۞ مسابقة حفظ القرآن الكريم ۞<br>
-  إعداد وبرمجة: وائل دهشان<br>
-  يجب مراجعة نصوص الأسئلة على مصحف معتمد قبل النشر.
-</footer>
+  $("continueButton").onclick = passed
+    ? continueAfterStage
+    : retryStage;
 
-<script>
-/*
-صيغة السؤال:
-{q:"نص السؤال", o:["الخيار الأول","الخيار الثاني","الخيار الثالث"], a:0}
-
-a هو موضع الإجابة الصحيحة قبل خلط الخيارات:
-0 أو 1 أو 2.
-
-أضف أسئلة جديدة إلى المصفوفات أدناه.
-التطبيق لا يكرر السؤال نفسه داخل المحاولة الواحدة.
-*/
-
-const banks = {
-  amma: [
-    {q:"﴿عَمَّ يَتَسَاءَلُونَ ۝ عَنِ النَّبَإِ ...﴾",o:["الْعَظِيمِ","الْحَكِيمِ","الْمُبِينِ"],a:0},
-    {q:"﴿وَجَعَلْنَا نَوْمَكُمْ ...﴾",o:["سُبَاتًا","لِبَاسًا","مَعَاشًا"],a:0},
-    {q:"﴿وَجَعَلْنَا اللَّيْلَ ...﴾",o:["سِرَاجًا","لِبَاسًا","سُبَاتًا"],a:1},
-    {q:"﴿إِنَّ لِلْمُتَّقِينَ ...﴾ في سورة النبأ",o:["مَفَازًا","مَخْرَجًا","مَقَامًا"],a:0},
-    {q:"﴿وَكَوَاعِبَ ...﴾",o:["أَتْرَابًا","أَبْكَارًا","حِسَانًا"],a:0},
-    {q:"﴿فَذُوقُوا فَلَنْ ...﴾",o:["نَزِيدَكُمْ إِلَّا عَذَابًا","نُخَفِّفَ عَنْكُمُ الْعَذَابَ","نَنْسَىٰ أَعْمَالَكُمْ"],a:0},
-    {q:"﴿يَوْمَ يَقُومُ الرُّوحُ وَالْمَلَائِكَةُ ...﴾",o:["صَفًّا","أَفْوَاجًا","زُمَرًا"],a:0},
-    {q:"﴿إِنَّ جَهَنَّمَ كَانَتْ ...﴾",o:["مِرْصَادًا","مِهَادًا","مَقَامًا"],a:0},
-    {q:"﴿وَالسَّمَاءِ ذَاتِ ...﴾ في سورة الطارق",o:["الرَّجْعِ","الْبُرُوجِ","الطَّارِقِ"],a:0},
-    {q:"﴿إِنَّهُ عَلَىٰ رَجْعِهِ ...﴾",o:["لَقَادِرٌ","لَشَهِيدٌ","لَحَفِيظٌ"],a:0},
-    {q:"﴿وَالسَّمَاءِ ذَاتِ الْبُرُوجِ ۝ وَالْيَوْمِ ...﴾",o:["الْمَوْعُودِ","الْمَشْهُودِ","الْحَقِّ"],a:0},
-    {q:"﴿قُتِلَ أَصْحَابُ ...﴾",o:["الْأُخْدُودِ","الْفِيلِ","الْحِجْرِ"],a:0},
-    {q:"﴿إِنَّ بَطْشَ رَبِّكَ ...﴾",o:["لَشَدِيدٌ","لَقَرِيبٌ","لَعَظِيمٌ"],a:0},
-    {q:"﴿وَالسَّمَاءِ وَالطَّارِقِ ۝ وَمَا أَدْرَاكَ مَا ...﴾",o:["الطَّارِقُ","الْقَارِعَةُ","الْحَاقَّةُ"],a:0},
-    {q:"﴿إِنَّهُمْ يَكِيدُونَ ...﴾ في سورة الطارق",o:["كَيْدًا","مَكْرًا","شَرًّا"],a:0},
-    {q:"﴿وَاللَّيْلِ إِذَا ...﴾ في سورة الليل",o:["يَغْشَىٰ","تَجَلَّىٰ","يَسْرِ"],a:0},
-    {q:"﴿فَأَمَّا مَنْ أَعْطَىٰ وَاتَّقَىٰ ۝ وَصَدَّقَ ...﴾",o:["بِالْحُسْنَىٰ","بِالْآخِرَةِ","بِالْحَقِّ"],a:0},
-    {q:"﴿وَأَمَّا مَنْ بَخِلَ وَاسْتَغْنَىٰ ۝ وَكَذَّبَ ...﴾",o:["بِالْحُسْنَىٰ","بِاللِّقَاءِ","بِالْوَعْدِ"],a:0},
-    {q:"﴿إِنَّ عَلَيْنَا ...﴾ في سورة الليل",o:["لَلْهُدَىٰ","لَلْحِسَابَ","لَلْجَزَاءَ"],a:0},
-    {q:"﴿وَالضُّحَىٰ ۝ وَاللَّيْلِ إِذَا ...﴾",o:["سَجَىٰ","يَغْشَىٰ","يَسْرِ"],a:0},
-    {q:"﴿مَا وَدَّعَكَ رَبُّكَ وَمَا ...﴾",o:["قَلَىٰ","نَسِيَ","غَفَلَ"],a:0},
-    {q:"﴿وَلَلْآخِرَةُ خَيْرٌ لَكَ مِنَ ...﴾",o:["الْأُولَىٰ","الدُّنْيَا","الْحَيَاةِ"],a:0},
-    {q:"﴿فَأَمَّا الْيَتِيمَ فَلَا ...﴾",o:["تَقْهَرْ","تَنْهَرْ","تَحْزَنْ"],a:0},
-    {q:"﴿وَأَمَّا السَّائِلَ فَلَا ...﴾",o:["تَنْهَرْ","تَقْهَرْ","تَمْنَعْ"],a:0},
-    {q:"﴿أَلَمْ نَشْرَحْ لَكَ ...﴾",o:["صَدْرَكَ","قَلْبَكَ","أَمْرَكَ"],a:0},
-    {q:"﴿وَوَضَعْنَا عَنْكَ ...﴾",o:["وِزْرَكَ","حِمْلَكَ","خَوْفَكَ"],a:0},
-    {q:"﴿الَّذِي أَنْقَضَ ...﴾",o:["ظَهْرَكَ","قَلْبَكَ","صَدْرَكَ"],a:0},
-    {q:"﴿فَإِذَا فَرَغْتَ ...﴾",o:["فَانْصَبْ","فَاسْجُدْ","فَاسْتَغْفِرْ"],a:0},
-    {q:"﴿وَإِلَىٰ رَبِّكَ ...﴾",o:["فَارْغَبْ","فَأَنِبْ","فَاسْجُدْ"],a:0},
-    {q:"﴿وَالتِّينِ وَالزَّيْتُونِ ۝ وَطُورِ ...﴾",o:["سِينِينَ","الْأَمِينِ","مَكَّةَ"],a:0},
-    {q:"﴿لَقَدْ خَلَقْنَا الْإِنْسَانَ فِي ...﴾",o:["أَحْسَنِ تَقْوِيمٍ","كَبَدٍ","ضَعْفٍ"],a:0},
-    {q:"﴿ثُمَّ رَدَدْنَاهُ ...﴾",o:["أَسْفَلَ سَافِلِينَ","إِلَىٰ أَجَلٍ","إِلَىٰ رَبِّهِ"],a:0},
-    {q:"﴿اقْرَأْ بِاسْمِ رَبِّكَ الَّذِي ...﴾",o:["خَلَقَ","عَلَّمَ","رَزَقَ"],a:0},
-    {q:"﴿خَلَقَ الْإِنْسَانَ مِنْ ...﴾",o:["عَلَقٍ","طِينٍ","نُطْفَةٍ"],a:0},
-    {q:"﴿كَلَّا إِنَّ الْإِنْسَانَ ...﴾ في سورة العلق",o:["لَيَطْغَىٰ","لَيَحْزَنُ","لَيَكْفُرُ"],a:0},
-    {q:"﴿إِنَّا أَعْطَيْنَاكَ ...﴾",o:["الْكَوْثَرَ","الْفَتْحَ","النَّصْرَ"],a:0},
-    {q:"﴿فَصَلِّ لِرَبِّكَ ...﴾",o:["وَانْحَرْ","وَاسْجُدْ","وَاسْتَغْفِرْ"],a:0},
-    {q:"﴿تَبَّتْ يَدَا أَبِي لَهَبٍ ...﴾",o:["وَتَبَّ","وَخَسِرَ","وَضَلَّ"],a:0},
-    {q:"﴿سَيَصْلَىٰ نَارًا ...﴾",o:["ذَاتَ لَهَبٍ","حَامِيَةً","مُؤْصَدَةً"],a:0},
-    {q:"﴿قُلْ أَعُوذُ بِرَبِّ ...﴾ في سورة الفلق",o:["الْفَلَقِ","النَّاسِ","الْعَالَمِينَ"],a:0},
-    {q:"﴿مِنْ شَرِّ غَاسِقٍ إِذَا ...﴾",o:["وَقَبَ","غَشِيَ","ظَهَرَ"],a:0},
-    {q:"﴿قُلْ أَعُوذُ بِرَبِّ النَّاسِ ۝ مَلِكِ ...﴾",o:["النَّاسِ","الْفَلَقِ","الْعَالَمِينَ"],a:0},
-    {q:"﴿مِنْ شَرِّ الْوَسْوَاسِ ...﴾",o:["الْخَنَّاسِ","الْكَذَّابِ","الْجَنَّاسِ"],a:0},
-    {q:"﴿وَالْعَادِيَاتِ ...﴾",o:["ضَبْحًا","قَدْحًا","صُبْحًا"],a:0},
-    {q:"﴿فَالْمُورِيَاتِ ...﴾",o:["قَدْحًا","ضَبْحًا","نَقْعًا"],a:0},
-    {q:"﴿فَالْمُغِيرَاتِ ...﴾",o:["صُبْحًا","قَدْحًا","جَمْعًا"],a:0},
-    {q:"﴿إِذَا زُلْزِلَتِ الْأَرْضُ ...﴾",o:["زِلْزَالَهَا","رَجْفَتَهَا","مَدَّهَا"],a:0},
-    {q:"﴿يَوْمَئِذٍ تُحَدِّثُ ...﴾",o:["أَخْبَارَهَا","أَثْقَالَهَا","أَسْرَارَهَا"],a:0},
-    {q:"﴿فَمَنْ يَعْمَلْ مِثْقَالَ ذَرَّةٍ ...﴾",o:["خَيْرًا يَرَهُ","شَرًّا يَرَهُ","حَقًّا يَعْلَمْهُ"],a:0},
-    {q:"﴿وَالْعَصْرِ ۝ إِنَّ الْإِنْسَانَ ...﴾",o:["لَفِي خُسْرٍ","لَفِي نَعِيمٍ","لَفِي شَكٍّ"],a:0}
-  ],
-
-  baqarah: [
-    {q:"﴿ذَٰلِكَ الْكِتَابُ لَا رَيْبَ فِيهِ ...﴾",o:["هُدًى لِلْمُتَّقِينَ","بُشْرَىٰ لِلْمُؤْمِنِينَ","نُورٌ لِلْعَالَمِينَ"],a:0},
-    {q:"﴿الَّذِينَ يُؤْمِنُونَ بِالْغَيْبِ وَيُقِيمُونَ الصَّلَاةَ ...﴾",o:["وَمِمَّا رَزَقْنَاهُمْ يُنْفِقُونَ","وَهُمْ بِالْآخِرَةِ يُوقِنُونَ","أُولَٰئِكَ هُمُ الْمُفْلِحُونَ"],a:0},
-    {q:"﴿أُولَٰئِكَ عَلَىٰ هُدًى مِنْ رَبِّهِمْ ...﴾",o:["وَأُولَٰئِكَ هُمُ الْمُفْلِحُونَ","وَلَهُمْ عَذَابٌ عَظِيمٌ","وَاللَّهُ بِمَا يَعْمَلُونَ عَلِيمٌ"],a:0},
-    {q:"﴿إِنَّ الَّذِينَ كَفَرُوا سَوَاءٌ عَلَيْهِمْ ...﴾",o:["أَأَنْذَرْتَهُمْ أَمْ لَمْ تُنْذِرْهُمْ لَا يُؤْمِنُونَ","لَا يَسْتَحْيُونَ أَنْ يَضْرِبُوا مَثَلًا","لَهُمْ عَذَابٌ عَظِيمٌ"],a:0},
-    {q:"﴿خَتَمَ اللَّهُ عَلَىٰ قُلُوبِهِمْ وَعَلَىٰ سَمْعِهِمْ ...﴾",o:["وَعَلَىٰ أَبْصَارِهِمْ غِشَاوَةٌ","وَلَهُمْ عَذَابٌ أَلِيمٌ","وَاللَّهُ بِمَا يَعْمَلُونَ مُحِيطٌ"],a:0},
-    {q:"﴿وَإِذَا قِيلَ لَهُمْ لَا تُفْسِدُوا فِي الْأَرْضِ ...﴾",o:["قَالُوا إِنَّمَا نَحْنُ مُصْلِحُونَ","قَالُوا آمَنَّا بِاللَّهِ","قَالُوا سَمِعْنَا وَأَطَعْنَا"],a:0},
-    {q:"﴿أَلَا إِنَّهُمْ هُمُ الْمُفْسِدُونَ ...﴾",o:["وَلَٰكِنْ لَا يَشْعُرُونَ","وَلَٰكِنْ لَا يَعْلَمُونَ","وَهُمْ لَا يَرْجِعُونَ"],a:0},
-    {q:"﴿مَثَلُهُمْ كَمَثَلِ الَّذِي اسْتَوْقَدَ ...﴾",o:["نَارًا","مَاءً","ضَوْءًا"],a:0},
-    {q:"﴿صُمٌّ بُكْمٌ عُمْيٌ ...﴾",o:["فَهُمْ لَا يَرْجِعُونَ","فَهُمْ لَا يَعْقِلُونَ","فَهُمْ لَا يُبْصِرُونَ"],a:0},
-    {q:"﴿يَا أَيُّهَا النَّاسُ اعْبُدُوا رَبَّكُمُ ...﴾",o:["الَّذِي خَلَقَكُمْ وَالَّذِينَ مِنْ قَبْلِكُمْ","الَّذِي أَنْزَلَ الْكِتَابَ","الَّذِي جَعَلَ لَكُمُ اللَّيْلَ"],a:0},
-    {q:"﴿الَّذِي جَعَلَ لَكُمُ الْأَرْضَ ...﴾",o:["فِرَاشًا","قَرَارًا","مِهَادًا"],a:0},
-    {q:"﴿وَأَنْزَلَ مِنَ السَّمَاءِ مَاءً ...﴾",o:["فَأَخْرَجَ بِهِ مِنَ الثَّمَرَاتِ رِزْقًا لَكُمْ","فَأَحْيَا بِهِ الْأَرْضَ بَعْدَ مَوْتِهَا","فَسَالَتْ أَوْدِيَةٌ بِقَدَرِهَا"],a:0},
-    {q:"﴿وَإِنْ كُنْتُمْ فِي رَيْبٍ مِمَّا نَزَّلْنَا عَلَىٰ عَبْدِنَا ...﴾",o:["فَأْتُوا بِسُورَةٍ مِنْ مِثْلِهِ","فَأْتُوا بِعَشْرِ سُوَرٍ","فَاسْأَلُوا أَهْلَ الذِّكْرِ"],a:0},
-    {q:"﴿فَإِنْ لَمْ تَفْعَلُوا وَلَنْ تَفْعَلُوا ...﴾",o:["فَاتَّقُوا النَّارَ الَّتِي وَقُودُهَا النَّاسُ وَالْحِجَارَةُ","فَاتَّقُوا اللَّهَ حَقَّ تُقَاتِهِ","فَاسْتَبِقُوا الْخَيْرَاتِ"],a:0},
-    {q:"﴿إِنَّ اللَّهَ لَا يَسْتَحْيِي أَنْ يَضْرِبَ مَثَلًا ...﴾",o:["مَا بَعُوضَةً فَمَا فَوْقَهَا","ذُبَابًا فَمَا دُونَهُ","نَاقَةً فَمَا فَوْقَهَا"],a:0},
-    {q:"﴿الَّذِينَ يَنْقُضُونَ عَهْدَ اللَّهِ مِنْ بَعْدِ ...﴾",o:["مِيثَاقِهِ","تَوْكِيدِهِ","تَنْزِيلِهِ"],a:0},
-    {q:"﴿كَيْفَ تَكْفُرُونَ بِاللَّهِ وَكُنْتُمْ ...﴾",o:["أَمْوَاتًا فَأَحْيَاكُمْ","ضُعَفَاءَ فَقَوَّاكُمْ","فُقَرَاءَ فَأَغْنَاكُمْ"],a:0},
-    {q:"﴿هُوَ الَّذِي خَلَقَ لَكُمْ مَا فِي الْأَرْضِ ...﴾",o:["جَمِيعًا","كَثِيرًا","قَلِيلًا"],a:0},
-    {q:"﴿وَإِذْ قَالَ رَبُّكَ لِلْمَلَائِكَةِ إِنِّي ...﴾",o:["جَاعِلٌ فِي الْأَرْضِ خَلِيفَةً","خَالِقٌ بَشَرًا مِنْ طِينٍ","مُنَزِّلٌ كِتَابًا"],a:0},
-    {q:"﴿وَعَلَّمَ آدَمَ الْأَسْمَاءَ ...﴾",o:["كُلَّهَا","بَعْضَهَا","أَجْمَعِينَ"],a:0},
-    {q:"﴿قَالُوا سُبْحَانَكَ لَا عِلْمَ لَنَا ...﴾",o:["إِلَّا مَا عَلَّمْتَنَا","إِلَّا مَا أَرَيْتَنَا","إِلَّا مَا أَنْزَلْتَ"],a:0},
-    {q:"﴿وَإِذْ قُلْنَا لِلْمَلَائِكَةِ اسْجُدُوا لِآدَمَ ...﴾",o:["فَسَجَدُوا إِلَّا إِبْلِيسَ","فَأَبَوْا إِلَّا إِبْلِيسَ","فَسَجَدُوا أَجْمَعُونَ"],a:0},
-    {q:"﴿وَقُلْنَا يَا آدَمُ اسْكُنْ أَنْتَ وَزَوْجُكَ ...﴾",o:["الْجَنَّةَ","الْأَرْضَ","الْبَيْتَ"],a:0},
-    {q:"﴿فَتَلَقَّىٰ آدَمُ مِنْ رَبِّهِ ...﴾",o:["كَلِمَاتٍ فَتَابَ عَلَيْهِ","رَحْمَةً فَغَفَرَ لَهُ","هُدًى فَاهْتَدَىٰ"],a:0},
-    {q:"﴿يَا بَنِي إِسْرَائِيلَ اذْكُرُوا نِعْمَتِيَ ...﴾",o:["الَّتِي أَنْعَمْتُ عَلَيْكُمْ","الَّتِي وَعَدْتُكُمْ","الَّتِي كَتَبْتُ لَكُمْ"],a:0},
-    {q:"﴿وَأَوْفُوا بِعَهْدِي ...﴾",o:["أُوفِ بِعَهْدِكُمْ","أَغْفِرْ لَكُمْ","أَرْحَمْكُمْ"],a:0},
-    {q:"﴿وَلَا تَلْبِسُوا الْحَقَّ بِالْبَاطِلِ ...﴾",o:["وَتَكْتُمُوا الْحَقَّ وَأَنْتُمْ تَعْلَمُونَ","وَأَنْتُمْ تَسْمَعُونَ","وَأَنْتُمْ تَعْقِلُونَ"],a:0},
-    {q:"﴿وَاسْتَعِينُوا بِالصَّبْرِ ...﴾",o:["وَالصَّلَاةِ","وَالزَّكَاةِ","وَالذِّكْرِ"],a:0},
-    {q:"﴿الَّذِينَ يَظُنُّونَ أَنَّهُمْ مُلَاقُو ...﴾",o:["رَبِّهِمْ وَأَنَّهُمْ إِلَيْهِ رَاجِعُونَ","يَوْمِهِمْ وَأَنَّهُمْ مُحَاسَبُونَ","الْحَقِّ وَأَنَّهُمْ مُؤْمِنُونَ"],a:0},
-    {q:"﴿ثُمَّ قَسَتْ قُلُوبُكُمْ مِنْ بَعْدِ ذَٰلِكَ ...﴾",o:["فَهِيَ كَالْحِجَارَةِ أَوْ أَشَدُّ قَسْوَةً","فَهِيَ كَالْمَاءِ فِي لِينِهَا","فَهِيَ كَالْجِبَالِ رُسُوًّا"],a:0}
-  ]
-};
-
-let contest = "";
-let questions = [];
-let index = 0;
-let totalCorrect = 0;
-let stageCorrect = 0;
-let stage = 0;
-let stageStart = 0;
-let lastStageScore = 0;
-let stageCount = 0;
-let selectedQuestionIds = new Set();
-let lastStageFinished = false;
-
-const $ = id => document.getElementById(id);
-
-function show(id) {
-  ["home","quiz","stageResult","finalResult"].forEach(x => $(x).classList.add("hidden"));
-  $(id).classList.remove("hidden");
+  show("stageResult");
 }
 
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
+function retryStage() {
+  // إعادة أسئلة المرحلة الحالية فقط
+  const start = stage * 10;
+  const end = Math.min(start + 10, questions.length);
 
-function startQuiz(type) {
-  contest = type;
-  const bank = banks[type];
+  questions.splice(start, end - start, ...shuffle(questions.slice(start, end)));
 
-  if (!bank || bank.length === 0) {
-    alert("لا توجد أسئلة مضافة لهذا القسم بعد.");
-    return;
-  }
-
-  // لا يسمح بتكرار السؤال داخل المحاولة.
-  questions = shuffle(bank.map((q, i) => ({...q, id: type + "-" + i})));
-  selectedQuestionIds = new Set();
-
-  const target = type === "amma" ? 50 : 100;
-  if (questions.length < target) {
-    alert(
-      "تنبيه: يحتوي بنك هذا القسم على " + questions.length +
-      " سؤالًا فقط، وليس " + target +
-      ". ستعمل المسابقة بالأسئلة الموجودة دون تكرارها. أضف بقية الأسئلة إلى مصفوفة " +
-      type + " قبل النشر."
-    );
-  }
-
-  index = 0;
-  totalCorrect = 0;
+  index = start;
   stageCorrect = 0;
-  stage = 0;
-  stageStart = 0;
   lastStageScore = 0;
-  stageCount = Math.ceil(questions.length / 10);
   lastStageFinished = false;
 
-  $("contestName").textContent =
-    type === "amma" ? "مسابقة جزء عمّ" : "مسابقة سورة البقرة";
-
-  $("stageList").style.gridTemplateColumns =
-    `repeat(${Math.min(stageCount, 5)}, minmax(0,1fr))`;
+  $("nextButton").dataset.answered = "no";
 
   renderStages();
   show("quiz");
   renderQuestion();
 }
 
-function renderStages() {
-  $("stageList").innerHTML = "";
-  for (let s = 0; s < stageCount; s++) {
-    const b = document.createElement("button");
-    b.className = "stage" + (s === stage ? " active" : "") + (s < stage ? " done" : "");
-    b.textContent = "مرحلة " + (s + 1);
-    b.disabled = true;
-    $("stageList").appendChild(b);
-  }
-  $("stageCounter").textContent = `المرحلة ${stage + 1} من ${stageCount}`;
-}
-
-function renderQuestion() {
-  if (index >= questions.length) {
-    showFinal();
-    return;
-  }
-
-  const q = questions[index];
-  const thisStage = Math.floor(index / 10);
-
-  if (thisStage !== stage) {
-    stage = thisStage;
-    stageCorrect = 0;
-    stageStart = index;
-    renderStages();
-  }
-
-  selectedQuestionIds.add(q.id);
-  $("questionCounter").textContent = `السؤال ${index + 1} من ${questions.length}`;
-  $("scoreCounter").textContent = `مجموع الصحيح: ${totalCorrect}`;
-  $("stageScore").textContent = `صحيح المرحلة: ${stageCorrect}`;
-  $("bar").style.width = `${(index / questions.length) * 100}%`;
-  $("questionText").textContent = q.q;
-
-  const opts = q.o.map((text, originalIndex) => ({
-    text, correct: originalIndex === q.a
-  }));
-
-  // خلط الخيارات حتى لا تكون الإجابة الصحيحة دائمًا في الموضع الأول.
-  const mixed = shuffle(opts);
-  const box = $("options");
-  box.innerHTML = "";
-
-  mixed.forEach(opt => {
-    const b = document.createElement("button");
-    b.className = "option";
-    b.textContent = opt.text;
-    b.onclick = () => chooseAnswer(b, opt.correct, mixed);
-    box.appendChild(b);
-  });
-
-  $("feedback").className = "feedback hidden";
-  $("feedback").textContent = "";
-  $("nextButton").classList.add("hidden");
-}
-
-function chooseAnswer(button, isCorrect, mixed) {
-  if ($("nextButton").dataset.answered === "yes") return;
-  $("nextButton").dataset.answered = "yes";
-
-  const buttons = [...$("options").querySelectorAll("button")];
-  buttons.forEach((b, i) => {
-    b.disabled = true;
-    if (mixed[i].correct) b.classList.add("correct");
-  });
-
-  const feedback = $("feedback");
-  if (isCorrect) {
-    totalCorrect++;
-    stageCorrect++;
-    feedback.textContent = "إجابة صحيحة، أحسنت.";
-    feedback.className = "feedback good";
-  } else {
-    button.classList.add("wrong");
-    const correct = mixed.find(x => x.correct);
-    feedback.textContent = "الإجابة الصحيحة: " + correct.text;
-    feedback.className = "feedback bad";
-  }
-
-  $("scoreCounter").textContent = `مجموع الصحيح: ${totalCorrect}`;
-  $("stageScore").textContent = `صحيح المرحلة: ${stageCorrect}`;
-
-  const stageEnd = Math.min((stage + 1) * 10, questions.length);
-  $("nextButton").textContent =
-    index + 1 === questions.length ? "عرض النتيجة النهائية" :
-    index + 1 === stageEnd ? "عرض نتيجة المرحلة" : "السؤال التالي";
-
-  $("nextButton").classList.remove("hidden");
-}
-
-function nextQuestion() {
-  if ($("nextButton").dataset.answered !== "yes") return;
-  $("nextButton").dataset.answered = "no";
-
-  const stageEnd = Math.min((stage + 1) * 10, questions.length);
-
-  if (index + 1 >= stageEnd) {
-    lastStageScore = stageCorrect;
-    lastStageFinished = true;
-    showStageResult();
-    return;
-  }
-
-  index++;
-  renderQuestion();
-}
-
-function showStageResult() {
-  const start = stage * 10 + 1;
-  const end = Math.min((stage + 1) * 10, questions.length);
-
-  $("stageResultTitle").textContent = `نتيجة المرحلة ${stage + 1}`;
-  $("stageResultScore").textContent = `${lastStageScore} / ${end - start + 1}`;
-  $("stageResultText").textContent =
-    `أجبت إجابة صحيحة عن ${lastStageScore} من ${end - start + 1} أسئلة. ` +
-    (lastStageScore >= 8 ? "أحسنت، واصل بهذا المستوى." : "راجع المواضع التي تحتاج إلى تثبيت.");
-
-  $("continueButton").textContent =
-    end >= questions.length ? "عرض النتيجة النهائية" : "الانتقال إلى المرحلة التالية";
-
-  show("stageResult");
-}
-
 function continueAfterStage() {
   if (!lastStageFinished) return;
+
+  const count = Math.min((stage + 1) * 10, questions.length);
+  const percentage = Math.round((lastStageScore / (count - stage * 10)) * 100);
+
+  // لا انتقال إلى المرحلة التالية دون تجاوز 70%
+  if (percentage <= 70) {
+    retryStage();
+    return;
+  }
 
   if (index + 1 >= questions.length) {
     showFinal();
@@ -429,31 +70,8 @@ function continueAfterStage() {
   stageCorrect = 0;
   stageStart = index;
   lastStageFinished = false;
+
   renderStages();
   show("quiz");
   renderQuestion();
 }
-
-function showFinal() {
-  show("finalResult");
-  const pct = Math.round((totalCorrect / questions.length) * 100);
-
-  $("finalScore").textContent = `${totalCorrect} / ${questions.length}`;
-  $("finalText").textContent =
-    `النسبة النهائية: ${pct}%. ` +
-    (pct >= 90 ? "ممتاز، بارك الله فيك وزادك حفظًا وإتقانًا." :
-    pct >= 75 ? "أحسنت، واصل المراجعة والتثبيت." :
-    pct >= 50 ? "نتيجة طيبة، والمراجعة ترفع مستوى الإتقان." :
-    "واصل المراجعة، وكرر المحاولة حتى يثبت الحفظ.");
-}
-
-function restartQuiz() {
-  startQuiz(contest);
-}
-
-function goHome() {
-  show("home");
-}
-</script>
-</body>
-</html>
