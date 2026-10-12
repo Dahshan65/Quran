@@ -1,0 +1,546 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#123d2b">
+<title>مسابقة حفظ القرآن الكريم</title>
+
+<style>
+:root {
+  --green: #123d2b;
+  --green2: #1d6043;
+  --gold: #d9b45b;
+  --cream: #f8f4e8;
+  --white: #fff;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Tahoma, Arial, sans-serif;
+  background: var(--cream);
+  color: #203127;
+}
+header {
+  background: linear-gradient(135deg, #0b2d20, #236647);
+  color: white;
+  text-align: center;
+  padding: 30px 15px;
+  border-bottom: 5px solid var(--gold);
+}
+header .ornament {
+  color: var(--gold);
+  font-size: 27px;
+  margin-bottom: 8px;
+}
+h1 { margin: 5px 0 12px; font-size: 27px; }
+header p { margin: 8px 0; line-height: 1.8; }
+.container {
+  max-width: 780px;
+  margin: 25px auto;
+  padding: 0 15px;
+}
+.panel {
+  background: white;
+  border: 1px solid #e6dfca;
+  border-radius: 18px;
+  padding: 22px;
+  margin-bottom: 18px;
+  box-shadow: 0 5px 18px #183c2810;
+}
+h2 { color: var(--green); margin-top: 0; }
+.subtitle { color: #627066; line-height: 1.9; }
+.contest-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 20px;
+}
+button {
+  font: inherit;
+  cursor: pointer;
+  border: 0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  transition: .15s;
+}
+button:hover { filter: brightness(1.07); }
+.contest-btn {
+  background: var(--green);
+  color: white;
+  border: 2px solid var(--gold);
+  min-height: 105px;
+  line-height: 1.8;
+  font-weight: bold;
+}
+.contest-btn span {
+  display: block;
+  color: #f2d98f;
+  font-size: 14px;
+  font-weight: normal;
+}
+.hidden { display: none !important; }
+.topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  color: #53665a;
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+.progress {
+  width: 100%;
+  height: 9px;
+  background: #e8eadf;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 22px;
+}
+.progress-bar {
+  height: 100%;
+  width: 0;
+  background: var(--gold);
+  transition: width .25s;
+}
+.question {
+  font-size: 22px;
+  font-weight: bold;
+  line-height: 2;
+  margin: 12px 0 22px;
+  color: #193d2b;
+}
+.options {
+  display: grid;
+  gap: 11px;
+}
+.option {
+  background: #fbfaf5;
+  color: #25372c;
+  border: 1px solid #dedccf;
+  text-align: right;
+  line-height: 1.9;
+}
+.option.correct {
+  background: #e0f3e5;
+  border: 2px solid #26834b;
+}
+.option.wrong {
+  background: #fce7e5;
+  border: 2px solid #c7473b;
+}
+.option:disabled { cursor: default; opacity: 1; }
+.feedback {
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 10px;
+  line-height: 1.9;
+}
+.feedback.good { background: #e0f3e5; color: #14552c; }
+.feedback.bad { background: #fff0df; color: #764719; }
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+.primary { background: var(--green); color: white; }
+.secondary { background: #e9e4d5; color: #26372b; }
+.gold { background: var(--gold); color: #2c2717; }
+.result-score {
+  font-size: 38px;
+  color: var(--green);
+  font-weight: bold;
+  text-align: center;
+  margin: 20px 0;
+}
+.result-message { text-align: center; line-height: 2; }
+footer {
+  text-align: center;
+  padding: 25px 12px;
+  color: #6e786e;
+  line-height: 2;
+  font-size: 13px;
+}
+@media (max-width: 520px) {
+  .contest-buttons { grid-template-columns: 1fr; }
+  h1 { font-size: 23px; }
+  .question { font-size: 19px; }
+  .panel { padding: 17px; }
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="ornament">۞ ﷽ ۞</div>
+  <h1>مسابقة حفظ القرآن الكريم</h1>
+  <p>اختبر حفظك وتدبّر آيات كتاب الله الكريم</p>
+  <div class="ornament">❁ ❁ ❁</div>
+</header>
+
+<main class="container">
+
+  <section id="home" class="panel">
+    <h2>اختر المسابقة</h2>
+    <p class="subtitle">
+      اختر القسم الذي تريد اختباره، ثم أجب عن أسئلة إكمال الآيات.
+      ستظهر نتيجتك بعد انتهاء الأسئلة.
+    </p>
+
+    <div class="contest-buttons">
+      <button class="contest-btn" onclick="startQuiz('amma')">
+        مسابقة جزء عمّ
+        <span>50 جولة مستهدفة</span>
+      </button>
+
+      <button class="contest-btn" onclick="startQuiz('baqarah')">
+        مسابقة سورة البقرة
+        <span>100 جولة مستهدفة</span>
+      </button>
+    </div>
+
+    <p class="subtitle">
+      إعداد وبرمجة: وائل دهشان
+    </p>
+  </section>
+
+  <section id="quiz" class="panel hidden">
+    <div class="topline">
+      <span id="contestName"></span>
+      <span id="questionCounter"></span>
+      <span id="scoreCounter">الصحيح: 0</span>
+    </div>
+
+    <div class="progress">
+      <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <div id="questionText" class="question"></div>
+    <div id="options" class="options"></div>
+    <div id="feedback" class="feedback hidden"></div>
+
+    <div class="actions">
+      <button id="nextButton" class="primary hidden" onclick="nextQuestion()">
+        السؤال التالي
+      </button>
+      <button class="secondary" onclick="goHome()">إنهاء والعودة</button>
+    </div>
+  </section>
+
+  <section id="result" class="panel hidden">
+    <h2 style="text-align:center">نتيجة المسابقة</h2>
+    <div id="resultName" class="result-message"></div>
+    <div id="resultScore" class="result-score"></div>
+    <div id="resultDetails" class="result-message"></div>
+
+    <div class="actions" style="justify-content:center">
+      <button class="primary" onclick="restartQuiz()">إعادة المسابقة</button>
+      <button class="secondary" onclick="goHome()">العودة للرئيسية</button>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  ۞ مسابقة حفظ القرآن الكريم ۞<br>
+  إعداد وبرمجة: وائل دهشان<br>
+  يُرجى مراجعة النصوص القرآنية على مصحف معتمد قبل نشر بنك الأسئلة.
+</footer>
+
+<script>
+/*
+  بنوك الأسئلة أدناه أمثلة أولية فقط.
+  أضف الأسئلة المدققة إلى المصفوفة المناسبة.
+  بنية السؤال:
+  { q: "بداية الآية، أكمل:", options: ["خيار 1", "خيار 2", "خيار 3"], answer: 0 }
+  answer هو رقم الإجابة الصحيحة: 0 أو 1 أو 2.
+*/
+
+const questionBanks = {
+  amma: [
+    {
+      q: "﴿عَمَّ يَتَسَاءَلُونَ ۝ عَنِ النَّبَإِ ...﴾",
+      options: ["الْعَظِيمِ", "الْمُبِينِ", "الْكَرِيمِ"],
+      answer: 0
+    },
+    {
+      q: "﴿أَلْهَاكُمُ التَّكَاثُرُ ۝ حَتَّىٰ ...﴾",
+      options: ["تَعْلَمُونَ", "زُرْتُمُ الْمَقَابِرَ", "تَرَوْنَ الْجَحِيمَ"],
+      answer: 1
+    },
+    {
+      q: "﴿وَالْعَصْرِ ۝ إِنَّ الْإِنْسَانَ ...﴾",
+      options: ["لَفِي خُسْرٍ", "فِي نَعِيمٍ", "لَفِي فَلَاحٍ"],
+      answer: 0
+    },
+    {
+      q: "﴿قُلْ هُوَ اللَّهُ أَحَدٌ ۝ اللَّهُ ...﴾",
+      options: ["الْغَفُورُ", "الصَّمَدُ", "الْعَلِيمُ"],
+      answer: 1
+    },
+    {
+      q: "﴿إِذَا جَاءَ نَصْرُ اللَّهِ ...﴾",
+      options: ["وَالْفَتْحُ", "وَالضُّحَى", "وَاللَّيْلِ"],
+      answer: 0
+    },
+    {
+      q: "﴿فَأَمَّا الْيَتِيمَ ...﴾",
+      options: ["فَلَا تَقْهَرْ", "فَلَا تَنْهَرْ", "فَلَا تَحْزَنْ"],
+      answer: 0
+    },
+    {
+      q: "﴿وَوَجَدَكَ ضَالًّا ...﴾",
+      options: ["فَهَدَىٰ", "فَأَغْنَىٰ", "فَآوَىٰ"],
+      answer: 0
+    },
+    {
+      q: "﴿وَالتِّينِ وَالزَّيْتُونِ ۝ وَطُورِ ...﴾",
+      options: ["سِينِينَ", "الْمَدِينَةِ", "مَكَّةَ"],
+      answer: 0
+    },
+    {
+      q: "﴿لَمْ يَلِدْ وَلَمْ ...﴾",
+      options: ["يَكُنْ لَهُ كُفُوًا أَحَدٌ", "يُولَدْ", "يَكُنْ لَهُ شَرِيكٌ"],
+      answer: 1
+    },
+    {
+      q: "﴿قُلْ أَعُوذُ بِرَبِّ ...﴾ في سورة الفلق",
+      options: ["النَّاسِ", "الْفَلَقِ", "الْعَالَمِينَ"],
+      answer: 1
+    }
+  ],
+
+  baqarah: [
+    {
+      q: "﴿الم ۝ ذَٰلِكَ الْكِتَابُ لَا ...﴾",
+      options: ["رَيْبَ فِيهِ", "خَوْفٌ عَلَيْهِمْ", "حُزْنٌ فِيهِ"],
+      answer: 0
+    },
+    {
+      q: "﴿الَّذِينَ يُؤْمِنُونَ بِالْغَيْبِ وَيُقِيمُونَ ...﴾",
+      options: ["الصِّيَامَ", "الصَّلَاةَ", "الْحَجَّ"],
+      answer: 1
+    },
+    {
+      q: "﴿خَتَمَ اللَّهُ عَلَىٰ قُلُوبِهِمْ وَعَلَىٰ ...﴾",
+      options: ["أَبْصَارِهِمْ غِشَاوَةٌ", "سَمْعِهِمْ وَأَبْصَارِهِمْ", "أَيْدِيهِمْ"],
+      answer: 0
+    },
+    {
+      q: "﴿وَبَشِّرِ الَّذِينَ آمَنُوا وَعَمِلُوا ...﴾",
+      options: ["الصَّالِحَاتِ", "الْخَيْرَاتِ", "الْحَسَنَاتِ"],
+      answer: 0
+    },
+    {
+      q: "﴿يَا أَيُّهَا النَّاسُ اعْبُدُوا ...﴾",
+      options: ["رَبَّكُمُ الَّذِي خَلَقَكُمْ", "الْمَلَائِكَةَ", "الْأَرْضَ"],
+      answer: 0
+    },
+    {
+      q: "﴿وَإِذْ قَالَ رَبُّكَ لِلْمَلَائِكَةِ إِنِّي ...﴾",
+      options: ["جَاعِلٌ فِي الْأَرْضِ خَلِيفَةً", "خَالِقٌ سَمَاءً", "مُنَزِّلٌ كِتَابًا"],
+      answer: 0
+    },
+    {
+      q: "﴿وَإِذْ قُلْنَا ادْخُلُوا هَٰذِهِ الْقَرْيَةَ ...﴾",
+      options: ["فَكُلُوا مِنْهَا حَيْثُ شِئْتُمْ رَغَدًا", "فَاخْرُجُوا مِنْهَا", "فَاصْبِرُوا"],
+      answer: 0
+    },
+    {
+      q: "﴿إِنَّ اللَّهَ مَعَ ...﴾",
+      options: ["الْمُتَّقِينَ", "الْمُسْرِفِينَ", "الْمُعْتَدِينَ"],
+      answer: 0
+    },
+    {
+      q: "﴿وَلَا تَقْرَبُوا الصَّلَاةَ وَأَنْتُمْ ...﴾",
+      options: ["تَعْلَمُونَ", "سُكَارَىٰ", "صَابِرُونَ"],
+      answer: 1
+    },
+    {
+      q: "﴿لَا إِكْرَاهَ فِي ...﴾",
+      options: ["الْعِلْمِ", "الدِّينِ", "الْعَمَلِ"],
+      answer: 1
+    }
+  ]
+};
+
+let currentBank = [];
+let currentQuestions = [];
+let currentIndex = 0;
+let correctCount = 0;
+let answered = false;
+let currentContest = "";
+let targetRounds = 0;
+
+function showSection(id) {
+  ["home", "quiz", "result"].forEach(sectionId => {
+    document.getElementById(sectionId).classList.add("hidden");
+  });
+  document.getElementById(id).classList.remove("hidden");
+}
+
+function shuffle(array) {
+  const result = [...array];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
+function startQuiz(type) {
+  currentContest = type;
+  currentBank = questionBanks[type];
+
+  if (!currentBank || currentBank.length === 0) {
+    alert("لا توجد أسئلة في هذا القسم حتى الآن.");
+    return;
+  }
+
+  targetRounds = type === "amma" ? 50 : 100;
+
+  /*
+    تنبيه: بنك الأسئلة الأولي أقصر من العدد المستهدف.
+    حتى تضيف أسئلة مدققة كافية، سيستخدم التطبيق الأسئلة
+    المتاحة ويكررها للوصول إلى عدد الجولات المحدد.
+  */
+  currentQuestions = [];
+  while (currentQuestions.length < targetRounds) {
+    currentQuestions.push(...shuffle(currentBank));
+  }
+  currentQuestions = currentQuestions.slice(0, targetRounds);
+
+  currentIndex = 0;
+  correctCount = 0;
+  answered = false;
+
+  document.getElementById("contestName").textContent =
+    type === "amma" ? "مسابقة جزء عمّ" : "مسابقة سورة البقرة";
+
+  showSection("quiz");
+  renderQuestion();
+}
+
+function renderQuestion() {
+  answered = false;
+
+  const question = currentQuestions[currentIndex];
+  document.getElementById("questionCounter").textContent =
+    `السؤال ${currentIndex + 1} من ${currentQuestions.length}`;
+
+  document.getElementById("scoreCounter").textContent =
+    `الصحيح: ${correctCount}`;
+
+  document.getElementById("progressBar").style.width =
+    `${(currentIndex / currentQuestions.length) * 100}%`;
+
+  document.getElementById("questionText").textContent = question.q;
+
+  const optionsContainer = document.getElementById("options");
+  optionsContainer.innerHTML = "";
+
+  const feedback = document.getElementById("feedback");
+  feedback.className = "feedback hidden";
+  feedback.textContent = "";
+
+  document.getElementById("nextButton").classList.add("hidden");
+
+  question.options.forEach((option, index) => {
+    const button = document.createElement("button");
+    button.className = "option";
+    button.textContent = `${["أ", "ب", "ج"][index]} ـ ${option}`;
+    button.onclick = () => chooseAnswer(index);
+    optionsContainer.appendChild(button);
+  });
+}
+
+function chooseAnswer(selectedIndex) {
+  if (answered) return;
+  answered = true;
+
+  const question = currentQuestions[currentIndex];
+  const buttons = [...document.querySelectorAll("#options button")];
+  const feedback = document.getElementById("feedback");
+
+  buttons.forEach((button, index) => {
+    button.disabled = true;
+    if (index === question.answer) button.classList.add("correct");
+    if (index === selectedIndex && index !== question.answer) {
+      button.classList.add("wrong");
+    }
+  });
+
+  if (selectedIndex === question.answer) {
+    correctCount++;
+    feedback.textContent = "أحسنت! إجابة صحيحة.";
+    feedback.className = "feedback good";
+  } else {
+    feedback.textContent =
+      `الإجابة الصحيحة: ${question.options[question.answer]}`;
+    feedback.className = "feedback bad";
+  }
+
+  document.getElementById("scoreCounter").textContent =
+    `الصحيح: ${correctCount}`;
+
+  const nextButton = document.getElementById("nextButton");
+  nextButton.textContent =
+    currentIndex === currentQuestions.length - 1
+      ? "عرض النتيجة"
+      : "السؤال التالي";
+  nextButton.classList.remove("hidden");
+}
+
+function nextQuestion() {
+  if (!answered) return;
+
+  currentIndex++;
+
+  if (currentIndex >= currentQuestions.length) {
+    showResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResult() {
+  showSection("result");
+
+  const total = currentQuestions.length;
+  const percentage = Math.round((correctCount / total) * 100);
+
+  document.getElementById("resultName").textContent =
+    currentContest === "amma"
+      ? "مسابقة جزء عمّ"
+      : "مسابقة سورة البقرة";
+
+  document.getElementById("resultScore").textContent =
+    `${correctCount} / ${total}`;
+
+  let message = "";
+  if (percentage >= 90) {
+    message = "ممتاز! بارك الله فيك وزادك حفظًا وإتقانًا.";
+  } else if (percentage >= 75) {
+    message = "أحسنت، مستواك جيد جدًا، واصل المراجعة.";
+  } else if (percentage >= 50) {
+    message = "بداية طيبة، راجع الآيات وحاول مرة أخرى.";
+  } else {
+    message = "لا تيأس، بالمراجعة والتكرار يتحسن الحفظ بإذن الله.";
+  }
+
+  document.getElementById("resultDetails").innerHTML =
+    `النسبة: <strong>${percentage}%</strong><br>${message}`;
+}
+
+function restartQuiz() {
+  startQuiz(currentContest);
+}
+
+function goHome() {
+  showSection("home");
+}
+</script>
+</body>
+</html>
