@@ -4,563 +4,517 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>مسابقة حفظ جزء عمّ | وائل دهشان</title>
+<title>مسابقة القرآن الكريم - جزء عمّ</title>
+
 <style>
 :root {
-  --green:#075b42;
-  --dark:#033b2c;
-  --gold:#d9b65d;
-  --cream:#fff9e9;
+  --gold: #d9b45b;
+  --dark: #092c25;
+  --green: #145c43;
+  --cream: #fff9e9;
 }
-* { box-sizing:border-box; }
+* { box-sizing: border-box; }
 body {
-  margin:0;
-  font-family:Tahoma,Arial,sans-serif;
-  color:#173c2e;
-  background:linear-gradient(135deg,#e7f1e7,#fff6df);
+  margin: 0;
+  font-family: Tahoma, Arial, sans-serif;
+  background: linear-gradient(145deg,#061d19,#14533c,#092c25);
+  color: var(--cream);
+  text-align: center;
+  min-height: 100vh;
 }
 header {
-  background:var(--dark);
-  color:white;
-  text-align:center;
-  padding:24px 12px;
-  border-bottom:5px solid var(--gold);
+  padding: 22px 12px 10px;
+  border-bottom: 1px solid #d9b45b66;
 }
-header h1 { margin:8px 0; font-size:27px; }
-header p { margin:8px 0; }
-main { max-width:850px; margin:22px auto; padding:0 12px 25px; }
+header h1 { color: var(--gold); margin: 8px 0; }
+header p { margin: 8px; }
+.container {
+  width: min(900px,94%);
+  margin: 24px auto;
+}
 .panel {
-  background:white;
-  border:1px solid #dfd1a4;
-  border-radius:18px;
-  padding:22px;
-  margin-bottom:18px;
-  box-shadow:0 5px 18px #173c2e12;
+  background: #ffffff0c;
+  border: 1px solid #d9b45b66;
+  border-radius: 18px;
+  padding: 22px;
+  margin: 16px 0;
+  box-shadow: 0 8px 25px #0003;
 }
-h2 { color:var(--green); margin-top:0; }
+h2 { color: var(--gold); }
+button, .social a {
+  display: inline-block;
+  border: 0;
+  border-radius: 10px;
+  padding: 13px 20px;
+  margin: 7px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  transition: .2s;
+}
 button {
-  font-family:inherit;
-  font-size:16px;
-  padding:13px 16px;
-  border:0;
-  border-radius:10px;
-  cursor:pointer;
+  background: var(--gold);
+  color: #10271e;
 }
-button:disabled { opacity:.55; cursor:not-allowed; }
-.primary { background:var(--green); color:white; }
-.gold { background:var(--gold); color:#35290c; }
-.light { background:#edf3ed; color:var(--dark); border:1px solid #cbd9ce; }
-.hidden { display:none!important; }
-.info {
-  background:#faf5e4;
-  border-right:4px solid var(--gold);
-  border-radius:8px;
-  padding:13px;
-  line-height:2;
+button:hover, .social a:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
 }
-.menu { display:grid; gap:12px; }
-.meta {
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-  flex-wrap:wrap;
-  font-size:14px;
+button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+  transform: none;
 }
-.progress {
-  height:10px;
-  background:#e5e9e4;
-  border-radius:20px;
-  overflow:hidden;
-  margin:14px 0;
+.secondary {
+  background: #ffffff18;
+  color: white;
+  border: 1px solid #d9b45b;
+}
+.stage-button {
+  display: block;
+  width: min(100%,480px);
+  margin: 12px auto;
+  padding: 16px;
+}
+.hidden { display: none !important; }
+#questionText {
+  font-size: 22px;
+  line-height: 1.9;
+  margin: 20px 0;
+}
+#options {
+  display: grid;
+  gap: 12px;
+  max-width: 650px;
+  margin: auto;
+}
+.option {
+  width: 100%;
+  margin: 0;
+  text-align: right;
+  background: #f9f1dc;
+  color: #17382b;
+  line-height: 1.6;
+}
+.option.correct { background: #a8e6b3; }
+.option.wrong { background: #ffc1b9; }
+.option:disabled { opacity: 1; }
+#feedback { min-height: 32px; margin: 15px; }
+#progress {
+  background: #ffffff22;
+  border-radius: 20px;
+  height: 12px;
+  overflow: hidden;
+  margin: 15px 0;
 }
 #progressBar {
-  height:100%;
-  width:0;
-  background:var(--gold);
-  transition:width .25s;
+  height: 100%;
+  width: 0;
+  background: var(--gold);
+  transition: width .3s;
 }
-.stages {
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:7px;
-  margin-bottom:20px;
+#systemDetails {
+  line-height: 2;
+  text-align: right;
 }
-.stage {
-  background:#edf2ec;
-  border-radius:8px;
-  padding:10px 3px;
-  text-align:center;
-  font-size:13px;
-}
-.stage.active { background:var(--green); color:white; }
-#questionType {
-  text-align:center;
-  color:#99751c;
-  font-weight:bold;
-}
-#questionText {
-  font-size:23px;
-  line-height:2;
-  margin:20px 0;
-  text-align:center;
-}
-.options { display:grid; gap:10px; }
-.option {
-  text-align:right;
-  background:#fafbf8;
-  color:#173c2e;
-  border:1px solid #cbd9ce;
-  line-height:1.8;
-}
-.option.correct { background:#d8f3df; border-color:#29934d; }
-.option.wrong { background:#ffe1df; border-color:#c44; }
-#feedback { margin-top:14px; line-height:1.9; font-weight:bold; }
-.good { color:#14713d; }
-.bad { color:#a52a2a; }
-.actions {
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  justify-content:center;
-  margin-top:20px;
-}
-.center { text-align:center; }
-.score {
-  color:var(--green);
-  font-size:34px;
-  font-weight:bold;
-}
-.celebration {
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-wrap:wrap;
-  gap:14px;
-  margin:18px 0;
-}
-.boy { width:130px; max-width:38%; height:auto; }
-.speech {
-  max-width:380px;
-  background:var(--cream);
-  border:2px solid var(--gold);
-  border-radius:18px;
-  padding:17px;
-  font-size:21px;
-  font-weight:bold;
-  line-height:1.9;
-  color:var(--green);
-}
-.social {
-  display:flex;
-  justify-content:center;
-  flex-wrap:wrap;
-  gap:12px;
-}
-.social a {
-  color:white;
-  text-decoration:none;
-  padding:13px 22px;
-  border-radius:10px;
-  font-weight:bold;
-}
-.facebook { background:#1877f2; }
-.instagram { background:#c13584; }
+.social { margin: 25px 0; }
+.social a { color: white; }
+.facebook { background: #1877f2; }
+.instagram { background: #b8328a; }
 footer {
-  text-align:center;
-  color:#65766b;
-  padding:18px;
-  font-size:14px;
+  padding: 20px 10px;
+  border-top: 1px solid #d9b45b55;
+  line-height: 2;
 }
-@media(max-width:520px) {
-  header h1 { font-size:22px; }
-  .panel { padding:16px; }
-  #questionText { font-size:20px; }
-  .speech { font-size:18px; }
+#mascot {
+  font-size: 82px;
+  animation: bounce 1s infinite alternate;
+}
+@keyframes bounce {
+  from { transform: translateY(0); }
+  to { transform: translateY(-9px); }
+}
+#successMessage {
+  font-size: 22px;
+  line-height: 1.9;
+  color: #ffe39b;
+}
+@media(max-width:600px) {
+  header h1 { font-size: 23px; }
+  .panel { padding: 16px 12px; }
+  #questionText { font-size: 19px; }
+  button, .social a { font-size: 15px; }
 }
 </style>
 </head>
-<body>
 
+<body>
 <header>
-  <div style="font-size:30px">۞ الله الرحمن الرحيم  ﷽ ۞</div>
-  <h1>مسابقة التحدّي في جزء عمّ</h1>
-  <p>60 سؤالًا في حفظ القرآن الكريم</p>
+  <div style="font-size:38px">۞</div>
+  <h1>مسابقة القرآن الكريم</h1>
+  <p>رحلة إيمانية في رحاب جزء عمّ</p>
   <p>إعداد وبرمجة: وائل دهشان</p>
 </header>
 
-<main>
+<main class="container">
 
-<section id="home" class="panel">
-  <h2>أهلًا وسهلًا بك في مسابقة جزء عمّ</h2>
-  <p>اختبر حفظك في سور جزء عمّ، من سورة النبأ إلى سورة الناس.</p>
-  <div class="info">
-    <b>نظام المسابقة:</b><br>
-    • 60 سؤالًا، لا أكثر ولا أقل.<br>
-    • أربع مراحل، في كل مرحلة 15 سؤالًا.<br>
-    • ثلاثة خيارات لكل سؤال.<br>
-    • النجاح عند الحصول على 70% على الأقل؛ أي 11 إجابة صحيحة من 15.<br>
-    • بعد النجاح يظهر الولد الكرتوني ويقول: «أحسنت، بارك الله فيك».<br>
-    • عند عدم النجاح تعيد المرحلة نفسها.
-  </div>
-  <br>
-  <div class="menu">
-    <button class="primary" onclick="startQuiz()">ابدأ المسابقة</button>
-  </div>
-</section>
+  <!-- القائمة الرئيسية -->
+  <section id="home" class="panel">
+    <h2>أهلًا وسهلًا بكم</h2>
+    <p>اختبر حفظك وفهمك لآيات جزء عمّ في أربع مراحل.</p>
 
-<section id="quiz" class="panel hidden">
-  <div class="meta">
-    <span id="stageLabel"></span>
-    <span id="questionCounter"></span>
-  </div>
-  <div class="progress"><div id="progressBar"></div></div>
-  <div class="stages" id="stages"></div>
-  <div id="questionType"></div>
-  <div id="questionText"></div>
-  <div class="options" id="options"></div>
-  <div id="feedback"></div>
-  <div class="actions">
-    <button id="nextButton" class="primary" disabled onclick="nextQuestion()">السؤال التالي</button>
-    <button class="light" onclick="goHome()">القائمة الرئيسية</button>
-  </div>
-</section>
+    <button onclick="showStages()">ابدأ المسابقة</button>
+    <button class="secondary" onclick="showSystem()">
+      نظام المسابقة
+    </button>
 
-<section id="result" class="panel hidden center">
-  <h2 id="resultTitle">نتيجة المرحلة</h2>
+    <div class="social">
+      <a class="facebook"
+         href="https://www.facebook.com/share/1Aq1zV9s6i/"
+         target="_blank" rel="noopener noreferrer">
+        فيسبوك
+      </a>
+      <a class="instagram"
+         href="https://www.instagram.com/wael_dahshan65?utm_source=qr&amp;psln=MWZlbGQ2ODh2Y2VreA=="
+         target="_blank" rel="noopener noreferrer">
+        إنستغرام
+      </a>
+    </div>
+  </section>
 
-  <div class="celebration">
-    <svg class="boy" viewBox="0 0 160 200" role="img" aria-label="ولد كرتوني بلباس إسلامي">
-      <ellipse cx="80" cy="188" rx="45" ry="7" fill="#d9e4d8"/>
-      <path d="M42 183 L46 120 Q48 102 63 99 L97 99 Q112 102 114 120 L118 183Z"
-            fill="#087452" stroke="#064632" stroke-width="3"/>
-      <path d="M70 100 L80 124 L90 100" fill="#fff4d7"/>
-      <path d="M75 121 L80 130 L85 121 L89 180 L71 180Z" fill="#d9b65d"/>
-      <path d="M48 119 L29 151 L39 158 L57 135" fill="#f0bd91" stroke="#b9825b" stroke-width="2"/>
-      <path d="M112 119 L131 151 L121 158 L103 135" fill="#f0bd91" stroke="#b9825b" stroke-width="2"/>
-      <path d="M64 42 Q80 27 96 42 L101 76 Q97 98 80 99 Q63 98 59 76Z"
-            fill="#f2c49d" stroke="#b9825b" stroke-width="2"/>
-      <path d="M58 61 Q54 31 80 27 Q106 31 102 61 L96 46 Q79 38 64 48Z" fill="#28352e"/>
-      <path d="M58 43 Q80 14 102 43 L98 51 Q80 39 62 51Z"
-            fill="#fff9e9" stroke="#d9b65d" stroke-width="3"/>
-      <circle cx="69" cy="65" r="3" fill="#2d302b"/>
-      <circle cx="91" cy="65" r="3" fill="#2d302b"/>
-      <path d="M73 79 Q80 87 88 79" fill="none" stroke="#9b493b" stroke-width="3" stroke-linecap="round"/>
-      <circle cx="61" cy="74" r="5" fill="#e99c8a" opacity=".7"/>
-      <circle cx="99" cy="74" r="5" fill="#e99c8a" opacity=".7"/>
-      <path d="M55 151 L47 184 L72 184 L77 153 M105 151 L113 184 L88 184 L83 153"
-            fill="#fff9e9" stroke="#d9b65d" stroke-width="2"/>
-    </svg>
-    <div class="speech" id="speechText">أحسنت، بارك الله فيك!</div>
-  </div>
+  <!-- نظام المسابقة -->
+  <section id="system" class="panel hidden">
+    <h2>نظام المسابقة</h2>
+    <div id="systemDetails">
+      <p>• تتكون المسابقة من 60 سؤالًا.</p>
+      <p>• الأسئلة من جزء عمّ فقط.</p>
+      <p>• تتكون من أربع مراحل، في كل مرحلة 15 سؤالًا.</p>
+      <p>• لكل سؤال ثلاثة خيارات، وإجابة واحدة صحيحة.</p>
+      <p>• درجة النجاح في المرحلة 70%، أي 11 إجابة صحيحة على الأقل من 15.</p>
+      <p>• عند النجاح تنتقل إلى المرحلة التالية.</p>
+      <p>• عند النجاح في المرحلة يظهر الترحيب: أحسنت، بارك الله فيك.</p>
+      <p>• تُحفظ المراحل المجتازة على هذا المتصفح.</p>
+    </div>
+    <button onclick="showHome()">العودة للقائمة الرئيسية</button>
+  </section>
 
-  <div class="score" id="resultScore"></div>
-  <p id="resultDetails"></p>
-  <div class="actions">
-    <button id="resultButton" class="primary" onclick="handleResult()">متابعة</button>
-    <button class="light" onclick="goHome()">القائمة الرئيسية</button>
-  </div>
-</section>
+  <!-- المراحل -->
+  <section id="stages" class="panel hidden">
+    <h2>اختر المرحلة</h2>
+    <p>يجب اجتياز كل مرحلة بنسبة 70% على الأقل.</p>
+    <div id="stageButtons"></div>
+    <button class="secondary" onclick="showHome()">القائمة الرئيسية</button>
+  </section>
 
-<section id="final" class="panel hidden center">
-  <h2>انتهت مسابقة جزء عمّ</h2>
-  <div class="score" id="finalScore"></div>
-  <p id="finalMessage"></p>
-  <button class="primary" onclick="goHome()">العودة إلى البداية</button>
-</section>
+  <!-- شاشة الأسئلة -->
+  <section id="quiz" class="panel hidden">
+    <h2 id="stageTitle"></h2>
+    <div id="progress"><div id="progressBar"></div></div>
+    <p id="questionCounter"></p>
+    <div id="questionText"></div>
+    <div id="options"></div>
+    <p id="feedback" aria-live="polite"></p>
+    <button id="nextButton" onclick="nextQuestion()" disabled>
+      السؤال التالي
+    </button>
+    <button class="secondary" onclick="showStages()">المراحل</button>
+  </section>
 
-<section class="panel center">
-  <h2>تابعوا صفحاتنا</h2>
-  <div class="social">
-    <a class="facebook" href="https://www.facebook.com/" target="_blank" rel="noopener">فيسبوك</a>
-    <a class="instagram" href="https://www.instagram.com/wael_dahshan/" target="_blank" rel="noopener">إنستغرام</a>
-  </div>
-  <p>إعداد وبرمجة: وائل دهشان</p>
-</section>
+  <!-- النتيجة والترحيب -->
+  <section id="result" class="panel hidden">
+    <div id="mascot" aria-label="ولد كرتوني">👳🏻‍♂️</div>
+    <h2 id="resultTitle"></h2>
+    <div id="successMessage"></div>
+    <p id="resultDetails"></p>
+    <button id="resultButton" onclick="resultAction()"></button>
+    <button class="secondary" onclick="showHome()">القائمة الرئيسية</button>
+  </section>
 
 </main>
 
-<footer>مسابقة تعليمية للمراجعة والتثبيت في جزء عمّ</footer>
+<footer>
+  <div>مسابقة القرآن الكريم — جزء عمّ</div>
+  <div>إعداد وبرمجة: وائل دهشان</div>
+  <div>رواق الخط العربي</div>
+</footer>
 
 <script>
 "use strict";
 
 /*
-  الأسئلة في هذا البنك مختارة من سور جزء عمّ فقط.
-  راجع النص القرآني في المصحف المعتمد قبل استخدام المسابقة رسميًا.
+  ملاحظة: الأسئلة أدناه من جزء عمّ.
+  رقم الإجابة الصحيحة يبدأ من الصفر:
+  0 = الخيار الأول، 1 = الثاني، 2 = الثالث.
 */
-
 const questions = [
+  // المرحلة الأولى: 1-15
+  {q:"في أي سورة ورد قوله تعالى: (عَمَّ يَتَسَاءَلُونَ)؟",o:["النازعات","النبأ","عبس"],a:1},
+  {q:"ما معنى (النَّبَإِ الْعَظِيمِ) في سياق سورة النبأ؟",o:["القرآن الكريم","البعث والقيامة","نزول المطر"],a:1},
+  {q:"كم عدد آيات سورة النبأ؟",o:["40","46","30"],a:0},
+  {q:"ما السورة التي تبدأ بقوله تعالى: (وَالنَّازِعَاتِ غَرْقًا)؟",o:["النازعات","المرسلات","التكوير"],a:0},
+  {q:"في أي سورة وردت آية (فَأَمَّا مَنْ طَغَى)؟",o:["النازعات","النبأ","الأعلى"],a:0},
+  {q:"ما السورة التي ورد فيها ذكر (السَّاهِرَةِ)؟",o:["عبس","النازعات","الانفطار"],a:1},
+  {q:"بماذا أقسم الله في مطلع سورة عبس؟",o:["بالشمس","بالنجوم","لم يرد قسم في مطلعها"],a:2},
+  {q:"ما السورة التي ورد فيها (قُتِلَ الْإِنْسَانُ مَا أَكْفَرَهُ)؟",o:["عبس","الطارق","البلد"],a:0},
+  {q:"في أي سورة وردت عبارة (وَإِذَا الصُّحُفُ نُشِرَتْ)؟",o:["الانفطار","التكوير","الانشقاق"],a:1},
+  {q:"ما السورة التي تبدأ بـ(إِذَا السَّمَاءُ انْفَطَرَتْ)؟",o:["الانفطار","التكوير","الانشقاق"],a:0},
+  {q:"في أي سورة وردت (وَيْلٌ لِلْمُطَفِّفِينَ)؟",o:["الهمزة","المطففين","الماعون"],a:1},
+  {q:"ما اسم السورة التي ورد فيها ذكر أصحاب الأخدود؟",o:["البروج","الطارق","البلد"],a:0},
+  {q:"في أي سورة ورد (وَالسَّمَاءِ وَالطَّارِقِ)؟",o:["البروج","الطارق","الفجر"],a:1},
+  {q:"ما السورة التي ورد فيها (إِنَّ بَطْشَ رَبِّكَ لَشَدِيدٌ)؟",o:["البروج","الغاشية","الليل"],a:0},
+  {q:"ما السورة التي تبدأ بقوله تعالى: (سَبِّحِ اسْمَ رَبِّكَ الْأَعْلَى)؟",o:["الغاشية","الأعلى","الفجر"],a:1},
 
-/* المرحلة الأولى: الأسئلة 1–15 */
-{q:"أكمل: «عَمَّ يَتَسَاءَلُونَ ۝ عَنِ النَّبَإِ ...»",o:["الْعَظِيمِ","الْكَرِيمِ","الْمُبِينِ"],a:0,t:"أكمل الآية"},
-{q:"أكمل: «أَلَمْ نَجْعَلِ الْأَرْضَ ...»",o:["مِهَادًا","قَرَارًا","بِسَاطًا"],a:0,t:"أكمل الآية"},
-{q:"ما الكلمة الناقصة؟ «وَجَعَلْنَا نَوْمَكُمْ ...»",o:["سُبَاتًا","سُكُونًا","رَاحَةً"],a:0,t:"الكلمة الناقصة"},
-{q:"أكمل: «وَبَنَيْنَا فَوْقَكُمْ سَبْعًا ...»",o:["شِدَادًا","طِبَاقًا","عِظَامًا"],a:0,t:"أكمل الآية"},
-{q:"ما الكلمة الناقصة؟ «وَأَنْزَلْنَا مِنَ الْمُعْصِرَاتِ مَاءً ...»",o:["ثَجَّاجًا","غَدَقًا","مُبَارَكًا"],a:0,t:"الكلمة الناقصة"},
-{q:"أكمل: «إِنَّ جَهَنَّمَ كَانَتْ ...»",o:["مِرْصَادًا","مِهَادًا","مَصِيرًا"],a:0,t:"أكمل الآية"},
-{q:"أكمل: «وَالنَّازِعَاتِ ...»",o:["غَرْقًا","نَشْطًا","سَبْحًا"],a:0,t:"أكمل الآية"},
-{q:"ما الكلمة الناقصة؟ «وَالنَّاشِطَاتِ ...»",o:["نَشْطًا","غَرْقًا","سَبْقًا"],a:0,t:"الكلمة الناقصة"},
-{q:"أكمل: «وَالسَّابِحَاتِ ...»",o:["سَبْحًا","سَرْعًا","سَبْقًا"],a:0,t:"أكمل الآية"},
-{q:"ما الكلمة الناقصة؟ «يَوْمَ تَرْجُفُ الرَّاجِفَةُ ۝ تَتْبَعُهَا ...»",o:["الرَّادِفَةُ","الصَّاخَّةُ","الْقَارِعَةُ"],a:0,t:"الكلمة الناقصة"},
-{q:"أكمل: «فَإِنَّمَا هِيَ ...»",o:["زَجْرَةٌ وَاحِدَةٌ","نَفْخَةٌ وَاحِدَةٌ","صَيْحَةٌ وَاحِدَةٌ"],a:0,t:"أكمل الآية"},
-{q:"ما الكلمة الناقصة؟ «وَأَمَّا مَنْ خَافَ ... رَبِّهِ»",o:["مَقَامَ","عَذَابَ","لِقَاءَ"],a:0,t:"الكلمة الناقصة"},
-{q:"أكمل: «عَبَسَ ...»",o:["وَتَوَلَّى","وَاسْتَكْبَرَ","وَأَعْرَضَ"],a:0,t:"أكمل الآية"},
-{q:"ما الكلمة الناقصة؟ «أَنْ جَاءَهُ ...»",o:["الْأَعْمَى","الْفَقِيرُ","السَّائِلُ"],a:0,t:"الكلمة الناقصة"},
-{q:"أكمل: «فَإِذَا جَاءَتِ ...»",o:["الصَّاخَّةُ","الْقَارِعَةُ","الْحَاقَّةُ"],a:0,t:"أكمل الآية"},
+  // المرحلة الثانية: 16-30
+  {q:"في أي سورة وردت (هَلْ أَتَاكَ حَدِيثُ الْغَاشِيَةِ)؟",o:["الغاشية","الزلزلة","القارعة"],a:0},
+  {q:"ما السورة التي ورد فيها (وَالْفَجْرِ وَلَيَالٍ عَشْرٍ)؟",o:["البلد","الفجر","الضحى"],a:1},
+  {q:"ما السورة التي ورد فيها ذكر ثمود الذين جابوا الصخر بالواد؟",o:["الفجر","الشمس","البلد"],a:0},
+  {q:"في أي سورة وردت (لَا أُقْسِمُ بِهَذَا الْبَلَدِ)؟",o:["البلد","الفجر","التين"],a:0},
+  {q:"ما السورة التي تبدأ بـ(وَالشَّمْسِ وَضُحَاهَا)؟",o:["الليل","الشمس","الضحى"],a:1},
+  {q:"في أي سورة وردت قصة ثمود وعقر الناقة بوضوح؟",o:["الشمس","القارعة","العاديات"],a:0},
+  {q:"ما السورة التي تبدأ بـ(وَاللَّيْلِ إِذَا يَغْشَى)؟",o:["الضحى","الليل","الشرح"],a:1},
+  {q:"في أي سورة ورد (فَأَمَّا مَنْ أَعْطَى وَاتَّقَى)؟",o:["الليل","العلق","القدر"],a:0},
+  {q:"ما السورة التي تبدأ بـ(وَالضُّحَى)؟",o:["الشرح","الضحى","التين"],a:1},
+  {q:"في أي سورة ورد (أَلَمْ نَشْرَحْ لَكَ صَدْرَكَ)؟",o:["الضحى","الشرح","العلق"],a:1},
+  {q:"ما السورة التي ورد فيها (وَالتِّينِ وَالزَّيْتُونِ)؟",o:["التين","القدر","البينة"],a:0},
+  {q:"في أي سورة ورد (اقْرَأْ بِاسْمِ رَبِّكَ الَّذِي خَلَقَ)؟",o:["القلم","العلق","القدر"],a:1},
+  {q:"ما السورة التي تتحدث عن ليلة القدر؟",o:["البينة","القدر","الزلزلة"],a:1},
+  {q:"في أي سورة ورد (لَمْ يَكُنِ الَّذِينَ كَفَرُوا)؟",o:["البينة","العلق","العصر"],a:0},
+  {q:"ما السورة التي تبدأ بـ(إِذَا زُلْزِلَتِ الْأَرْضُ زِلْزَالَهَا)؟",o:["القارعة","الزلزلة","العاديات"],a:1},
 
-/* المرحلة الثانية: الأسئلة 16–30 */
-{q:"ما الكلمة الناقصة؟ «إِذَا الشَّمْسُ ...»",o:["كُوِّرَتْ","انْكَدَرَتْ","انْفَطَرَتْ"],a:0,t:"الكلمة الناقصة"},
-{q:"أكمل: «وَإِذَا النُّجُومُ ...»",o:["انْكَدَرَتْ","انْفَطَرَتْ","انْتَثَرَتْ"],a:0,t:"أكمل الآية"},
-{q:"ما الكلمة الناقصة؟ «وَإِذَا الْجِبَالُ ...» في سورة التكوير",o:["سُيِّرَتْ","نُسِفَتْ","دُكَّتْ"],a:0,t:"الكلمة الناقصة"},
-{q:"أكمل: «وَإِذَا الْعِشَارُ ...»",o:["عُطِّلَتْ","عُشِّرَتْ","حُشِرَتْ"],a:0,t:"أكمل الآية"},
-{q:"ما الكلمة الناقصة؟ «وَإِذَا الْوُحُوشُ ...»",o:["حُشِرَتْ","سُيِّرَتْ","بُعْثِرَتْ"],a:0,t:"الكلمة الناقصة"},
-{q:"أكمل: «عَلِمَتْ نَفْسٌ مَا ...»",o:["أَحْضَرَتْ","قَدَّمَتْ","أَخَّرَتْ"],a:0,t:"أكمل الآية"},
-{q:"ما الكلمة الناقصة؟ «إِذَا السَّمَاءُ ...» في سورة الانفطار",o:["انْفَطَرَتْ","انْشَقَّتْ","كُوِّرَتْ"],a:0,t:"الكلمة الناقصة"},
-{q:"أكمل: «وَإِذَا الْكَوَاكِبُ ...»",o:["انْتَثَرَتْ","انْكَدَرَتْ","انْفَجَرَتْ"],a:0,t:"أكمل الآية"},
-{q:"ما الكلمة الناقصة؟ «وَإِذَا الْبِحَارُ ...» في سورة الانفطار",o:["فُجِّرَتْ","سُجِّرَتْ","انْشَقَّتْ"],a:0,t:"الكلمة الناقصة"},
-{q:"أكمل: «وَإِذَا الْقُبُورُ ...»",o:["بُعْثِرَتْ","انْتَثَرَتْ","سُيِّرَتْ"],a:0,t:"أكمل الآية"},
-{q:"ما الكلمة الناقصة؟ «يَا أَيُّهَا الْإِنْسَانُ مَا غَرَّكَ بِرَبِّكَ ...»",o:["الْكَرِيمِ","الْعَظِيمِ","الرَّحِيمِ"],a:0,t:"الكلمة الناقصة"},
-{q:"أكمل: «الَّذِي خَلَقَكَ فَسَوَّاكَ ...»",o:["فَعَدَلَكَ","فَهَدَاكَ","فَقَدَّرَكَ"],a:0,t:"أكمل الآية"},
-{q:"أكمل: «وَيْلٌ ...»",o:["لِلْمُطَفِّفِينَ","لِلْمُكَذِّبِينَ","لِلْغَافِلِينَ"],a:0,t:"أكمل الآية"},
-{q:"ما الكلمة الناقصة؟ «الَّذِينَ إِذَا اكْتَالُوا عَلَى النَّاسِ ...»",o:["يَسْتَوْفُونَ","يَخْسَرُونَ","يُخْسِرُونَ"],a:0,t:"الكلمة الناقصة"},
-{q:"أكمل: «وَإِذَا كَالُوهُمْ أَوْ وَزَنُوهُمْ ...»",o:["يُخْسِرُونَ","يَسْتَوْفُونَ","يُوفُونَ"],a:0,t:"أكمل الآية"},
+  // المرحلة الثالثة: 31-45
+  {q:"في أي سورة ورد (وَالْعَادِيَاتِ ضَبْحًا)؟",o:["العاديات","القارعة","التكاثر"],a:0},
+  {q:"ما السورة التي تبدأ بـ(الْقَارِعَةُ)؟",o:["الزلزلة","القارعة","الهمزة"],a:1},
+  {q:"في أي سورة ورد (أَلْهَاكُمُ التَّكَاثُرُ)؟",o:["التكاثر","العصر","الماعون"],a:0},
+  {q:"ما السورة التي تبدأ بالقسم (وَالْعَصْرِ)؟",o:["الهمزة","العصر","الفيل"],a:1},
+  {q:"في أي سورة ورد (وَيْلٌ لِكُلِّ هُمَزَةٍ لُمَزَةٍ)؟",o:["الهمزة","قريش","الماعون"],a:0},
+  {q:"ما السورة التي تتحدث عن أصحاب الفيل؟",o:["قريش","الفيل","المسد"],a:1},
+  {q:"في أي سورة ورد (لِإِيلَافِ قُرَيْشٍ)؟",o:["الفيل","قريش","الكوثر"],a:1},
+  {q:"ما السورة التي ورد فيها (فَصَلِّ لِرَبِّكَ وَانْحَرْ)؟",o:["الكوثر","الإخلاص","النصر"],a:0},
+  {q:"في أي سورة ورد (أَرَأَيْتَ الَّذِي يُكَذِّبُ بِالدِّينِ)؟",o:["قريش","الماعون","الكافرون"],a:1},
+  {q:"ما السورة التي تبدأ بـ(قُلْ يَا أَيُّهَا الْكَافِرُونَ)؟",o:["الكافرون","الإخلاص","الفلق"],a:0},
+  {q:"كم عدد آيات سورة الكوثر؟",o:["3","4","5"],a:0},
+  {q:"في أي سورة ورد (تَبَّتْ يَدَا أَبِي لَهَبٍ وَتَبَّ)؟",o:["المسد","النصر","الكافرون"],a:0},
+  {q:"ما السورة التي ورد فيها (إِذَا جَاءَ نَصْرُ اللَّهِ وَالْفَتْحُ)؟",o:["الفتح","النصر","المسد"],a:1},
+  {q:"في أي سورة ورد (قُلْ هُوَ اللَّهُ أَحَدٌ)؟",o:["الفلق","الإخلاص","الناس"],a:1},
+  {q:"ما السورة التي تبدأ بـ(قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ)؟",o:["الفلق","الناس","الإخلاص"],a:0},
 
-/* المرحلة الثالثة: الأسئلة 31–45 */
-{q:"أكمل: «كَلَّا إِنَّ كِتَابَ الْفُجَّارِ لَفِي ...»",o:["سِجِّينٍ","عِلِّيِّينَ","كِتَابٍ مَرْقُومٍ"],a:0,t:"أكمل الآية"},
-{q:"ما الكلمة الناقصة؟ «كَلَّا إِنَّ كِتَابَ الْأَبْرَارِ لَفِي ...»",o:["عِلِّيِّينَ","سِجِّينٍ","أُمِّ الْكِتَابِ"],a:0,t:"الكلمة الناقصة"},
-{q:"أكمل: «إِذَا السَّمَاءُ ...» في سورة الانشقاق",o:["انْشَقَّتْ","انْفَطَرَتْ","كُوِّرَتْ"],a:0,t:"أكمل الآية"},
-{q:"ما الكلمة الناقصة؟ «وَأَذِنَتْ لِرَبِّهَا ...»",o:["وَحُقَّتْ","وَسُجِّرَتْ","وَانْشَقَّتْ"],a:0,t:"الكلمة الناقصة"},
-{q:"أكمل: «وَإِذَا الْأَرْضُ ...» في سورة الانشقاق",o:["مُدَّتْ","زُلْزِلَتْ","دُكَّتْ"],a:0,t:"أكمل الآية"},
-{q:"ما الكلمة الناقصة؟ «وَأَلْقَتْ مَا فِيهَا ...»",o:["وَتَخَلَّتْ","وَتَصَدَّعَتْ","وَتَبَدَّلَتْ"],a:0,t:"الكلمة الناقصة"},
-{q:"أكمل: «وَالسَّمَاءِ ذَاتِ ...»",o:["الْبُرُوجِ","الطَّارِقِ","الْبَحْرِ"],a:0,t:"أكمل الآية"},
-{q:"ما الكلمة الناقصة؟ «وَالْيَوْمِ ...» في سورة البروج",o:["الْمَوْعُودِ","الْمَشْهُودِ","الْمَعْلُومِ"],a:0,t:"الكلمة الناقصة"},
-{q:"أكمل: «قُتِلَ أَصْحَابُ ...»",o:["الْأُخْدُودِ","الْفِيلِ","الْكَهْفِ"],a:0,t:"أكمل الآية"},
-{q:"ما الكلمة الناقصة؟ «النَّارِ ذَاتِ ...»",o:["الْوَقُودِ","اللَّهَبِ","السَّعِيرِ"],a:0,t:"الكلمة الناقصة"},
-{q:"أكمل: «وَالسَّمَاءِ وَ... » في مطلع سورة الطارق",o:["الطَّارِقِ","النَّجْمِ","الْبُرُوجِ"],a:0,t:"أكمل الآية"},
-{q:"ما الكلمة الناقصة؟ «إِنْ كُلُّ نَفْسٍ لَمَّا عَلَيْهَا ...»",o:["حَافِظٌ","رَقِيبٌ","شَهِيدٌ"],a:0,t:"الكلمة الناقصة"},
-{q:"أكمل: «خُلِقَ مِنْ مَاءٍ ...»",o:["دَافِقٍ","مَهِينٍ","مَعِينٍ"],a:0,t:"أكمل الآية"},
-{q:"ما الكلمة الناقصة؟ «يَخْرُجُ مِنْ بَيْنِ الصُّلْبِ وَ...»",o:["التَّرَائِبِ","الْأَضْلَاعِ","الْعِظَامِ"],a:0,t:"الكلمة الناقصة"},
-{q:"أكمل: «سَبِّحِ اسْمَ رَبِّكَ ...»",o:["الْأَعْلَى","الْعَظِيمِ","الْكَرِيمِ"],a:0,t:"أكمل الآية"},
-
-/* المرحلة الرابعة: الأسئلة 46–60 */
-{q:"ما الكلمة الناقصة؟ «الَّذِي خَلَقَ ...» في سورة الأعلى",o:["فَسَوَّى","فَهَدَى","فَقَدَّرَ"],a:0,t:"الكلمة الناقصة"},
-{q:"أكمل: «وَالَّذِي قَدَّرَ ...»",o:["فَهَدَى","فَسَوَّى","فَأَغْنَى"],a:0,t:"أكمل الآية"},
-{q:"ما الكلمة الناقصة؟ «وَالَّذِي أَخْرَجَ ...»",o:["الْمَرْعَى","الثَّمَرَ","الْمَاءَ"],a:0,t:"الكلمة الناقصة"},
-{q:"أكمل: «قَدْ أَفْلَحَ مَنْ ...» في سورة الأعلى",o:["تَزَكَّى","تَوَلَّى","تَدَسَّى"],a:0,t:"أكمل الآية"},
-{q:"ما الكلمة الناقصة؟ «بَلْ تُؤْثِرُونَ الْحَيَاةَ ...»",o:["الدُّنْيَا","الْآخِرَةَ","الْأُولَى"],a:0,t:"الكلمة الناقصة"},
-{q:"أكمل: «هَلْ أَتَاكَ حَدِيثُ ...»",o:["الْغَاشِيَةِ","الْقَارِعَةِ","الْحَاقَّةِ"],a:0,t:"أكمل الآية"},
-{q:"ما الكلمة الناقصة؟ «وُجُوهٌ يَوْمَئِذٍ ...» في مطلع وصف أهل الشقاء",o:["خَاشِعَةٌ","نَاعِمَةٌ","مُسْفِرَةٌ"],a:0,t:"الكلمة الناقصة"},
-{q:"أكمل: «تُسْقَى مِنْ عَيْنٍ ...»",o:["آنِيَةٍ","جَارِيَةٍ","سَلْسَبِيلٍ"],a:0,t:"أكمل الآية"},
-{q:"ما الكلمة الناقصة؟ «لَيْسَ لَهُمْ طَعَامٌ إِلَّا مِنْ ...»",o:["ضَرِيعٍ","زَقُّومٍ","غِسْلِينٍ"],a:0,t:"الكلمة الناقصة"},
-{q:"أكمل: «وُجُوهٌ يَوْمَئِذٍ ...» في وصف أهل النعيم",o:["نَاعِمَةٌ","خَاشِعَةٌ","غَبَرَةٌ"],a:0,t:"أكمل الآية"},
-{q:"ما الكلمة الناقصة؟ «لِسَعْيِهَا ...»",o:["رَاضِيَةٌ","مَرْضِيَّةٌ","مَشْكُورَةٌ"],a:0,t:"الكلمة الناقصة"},
-{q:"أكمل: «وَالشَّمْسِ ...»",o:["وَضُحَاهَا","وَاللَّيْلِ","وَالْقَمَرِ"],a:0,t:"أكمل الآية"},
-{q:"ما الكلمة الناقصة؟ «وَنَفْسٍ وَمَا ...»",o:["سَوَّاهَا","هَدَاهَا","خَلَقَهَا"],a:0,t:"الكلمة الناقصة"},
-{q:"أكمل: «قَدْ أَفْلَحَ مَنْ ...» في سورة الشمس",o:["زَكَّاهَا","دَسَّاهَا","أَغْوَاهَا"],a:0,t:"أكمل الآية"},
-{q:"ما الكلمة الناقصة؟ «وَكَذَّبَ ... بِطَغْوَاهَا»",o:["ثَمُودُ","عَادٌ","فِرْعَوْنُ"],a:0,t:"الكلمة الناقصة"}
+  // المرحلة الرابعة: 46-60
+  {q:"ما السورة التي تبدأ بـ(قُلْ أَعُوذُ بِرَبِّ النَّاسِ)؟",o:["الفلق","الناس","الإخلاص"],a:1},
+  {q:"كم عدد آيات سورة الإخلاص؟",o:["3","4","5"],a:1},
+  {q:"كم عدد آيات سورة الناس؟",o:["5","6","7"],a:1},
+  {q:"أي سورة ورد فيها ذكر (مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ)؟",o:["الفلق","الناس","الإخلاص"],a:1},
+  {q:"أي سورة ورد فيها (وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ)؟",o:["الناس","الفلق","المسد"],a:1},
+  {q:"في أي سورة ورد (مِنَ الْجِنَّةِ وَالنَّاسِ)؟",o:["الفلق","الناس","الكوثر"],a:1},
+  {q:"أي سورة ورد فيها (وَمِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ)؟",o:["الفلق","الناس","الإخلاص"],a:0},
+  {q:"ما السورة التي ورد فيها (اللَّهُ الصَّمَدُ)؟",o:["الفلق","الإخلاص","الناس"],a:1},
+  {q:"أي سورة ورد فيها ذكر (نَارًا ذَاتَ لَهَبٍ)؟",o:["المسد","الهمزة","الفيل"],a:0},
+  {q:"ما السورة التي ورد فيها (وَأَرْسَلَ عَلَيْهِمْ طَيْرًا أَبَابِيلَ)؟",o:["الفيل","قريش","العاديات"],a:0},
+  {q:"في أي سورة ورد (فَجَعَلَهُمْ كَعَصْفٍ مَأْكُولٍ)؟",o:["الفيل","القارعة","التكاثر"],a:0},
+  {q:"ما السورة التي ورد فيها (وَتَوَاصَوْا بِالْحَقِّ وَتَوَاصَوْا بِالصَّبْرِ)؟",o:["العصر","البلد","الشرح"],a:0},
+  {q:"في أي سورة ورد (وَوَجَدَكَ ضَالًّا فَهَدَى)؟",o:["الشرح","الضحى","العلق"],a:1},
+  {q:"ما السورة التي ورد فيها (كَلَّا إِنَّ الْإِنْسَانَ لَيَطْغَى)؟",o:["العلق","التين","القدر"],a:0},
+  {q:"أي سورة تختم بقوله تعالى (مِنَ الْجِنَّةِ وَالنَّاسِ)؟",o:["الفلق","الإخلاص","الناس"],a:2}
 ];
 
-let index = 0;
-let stage = 0;
-let stageCorrect = 0;
-let stageScores = [null,null,null,null];
+const stageNames = [
+  "المرحلة الأولى: التحدي الأول",
+  "المرحلة الثانية: أهل العزيمة",
+  "المرحلة الثالثة: فرسان القرآن",
+  "المرحلة الرابعة: القمة القرآنية"
+];
+
+let currentStage = 0;
+let currentQuestion = 0;
+let score = 0;
 let answered = false;
-let passedStage = false;
-let lastStageScore = 0;
-let optionOrder = [];
+let lastPassed = false;
 
-const $ = id => document.getElementById(id);
-
-function shuffle(array) {
-  const a = [...array];
-  for (let i=a.length-1; i>0; i--) {
-    const j = Math.floor(Math.random()*(i+1));
-    [a[i],a[j]] = [a[j],a[i]];
+function getPassedStages() {
+  try {
+    return JSON.parse(localStorage.getItem("juzAmmaPassed") || "[]");
+  } catch(e) {
+    return [];
   }
-  return a;
 }
 
-function showScreen(id) {
-  ["home","quiz","result","final"].forEach(s => {
-    $(s).classList.toggle("hidden",s!==id);
+function savePassedStage(stage) {
+  const passed = getPassedStages();
+  if (!passed.includes(stage)) passed.push(stage);
+  localStorage.setItem("juzAmmaPassed", JSON.stringify(passed));
+}
+
+function hideAll() {
+  ["home","system","stages","quiz","result"].forEach(id => {
+    document.getElementById(id).classList.add("hidden");
   });
-  window.scrollTo({top:0,behavior:"smooth"});
 }
 
-function goHome() {
-  if ("speechSynthesis" in window) speechSynthesis.cancel();
-  showScreen("home");
+function showHome() {
+  hideAll();
+  document.getElementById("home").classList.remove("hidden");
 }
 
-function startQuiz() {
-  index=0;
-  stage=0;
-  stageCorrect=0;
-  stageScores=[null,null,null,null];
-  answered=false;
-  passedStage=false;
-  lastStageScore=0;
-  showScreen("quiz");
-  renderQuestion();
+function showSystem() {
+  hideAll();
+  document.getElementById("system").classList.remove("hidden");
+}
+
+function showStages() {
+  hideAll();
+  document.getElementById("stages").classList.remove("hidden");
+  renderStages();
 }
 
 function renderStages() {
-  $("stages").innerHTML="";
-  for (let i=0; i<4; i++) {
-    const d=document.createElement("div");
-    d.className="stage"+(i===stage?" active":"");
-    d.textContent="المرحلة "+(i+1);
-    $("stages").appendChild(d);
-  }
-}
+  const container = document.getElementById("stageButtons");
+  container.innerHTML = "";
+  const passed = getPassedStages();
 
-function renderQuestion() {
-  answered=false;
-  const q=questions[index];
-
-  $("stageLabel").textContent="المرحلة "+(stage+1)+" من 4";
-  $("questionCounter").textContent="السؤال "+(index+1)+" من 60";
-  $("progressBar").style.width=((index+1)/60*100)+"%";
-  $("questionType").textContent=q.t;
-  $("questionText").textContent=q.q;
-  $("feedback").textContent="";
-  $("feedback").className="";
-  $("options").innerHTML="";
-  $("nextButton").disabled=true;
-  $("nextButton").textContent=(index%15===14)?"نتيجة المرحلة":"السؤال التالي";
-
-  renderStages();
-
-  optionOrder=shuffle(q.o.map((text,i)=>({text,original:i})));
-  optionOrder.forEach(op => {
-    const b=document.createElement("button");
-    b.className="option";
-    b.textContent=op.text;
-    b.onclick=()=>chooseAnswer(b,op.original,q.a);
-    $("options").appendChild(b);
+  stageNames.forEach((name, i) => {
+    const btn = document.createElement("button");
+    btn.className = "stage-button";
+    btn.textContent = name + (passed.includes(i) ? " ✓ مجتازة" : "");
+    btn.onclick = () => startStage(i);
+    container.appendChild(btn);
   });
 }
 
-function chooseAnswer(button,selected,correct) {
+function startStage(stage) {
+  currentStage = stage;
+  currentQuestion = 0;
+  score = 0;
+  answered = false;
+  hideAll();
+  document.getElementById("quiz").classList.remove("hidden");
+  document.getElementById("stageTitle").textContent = stageNames[stage];
+  renderQuestion();
+}
+
+function renderQuestion() {
+  answered = false;
+  const index = currentStage * 15 + currentQuestion;
+  const item = questions[index];
+
+  document.getElementById("questionCounter").textContent =
+    "السؤال " + (currentQuestion + 1) + " من 15";
+
+  document.getElementById("progressBar").style.width =
+    ((currentQuestion + 1) / 15 * 100) + "%";
+
+  document.getElementById("questionText").textContent = item.q;
+  document.getElementById("feedback").textContent = "";
+
+  const options = document.getElementById("options");
+  options.innerHTML = "";
+
+  item.o.forEach((option, i) => {
+    const btn = document.createElement("button");
+    btn.className = "option";
+    btn.textContent = ["أ) ","ب) ","ج) "][i] + option;
+    btn.onclick = () => chooseAnswer(i, btn);
+    options.appendChild(btn);
+  });
+
+  const next = document.getElementById("nextButton");
+  next.disabled = true;
+  next.textContent = currentQuestion === 14 ? "عرض النتيجة" : "السؤال التالي";
+}
+
+function chooseAnswer(choice, button) {
   if (answered) return;
-  answered=true;
+  answered = true;
 
-  const buttons=[...$("options").querySelectorAll("button")];
-  buttons.forEach(b=>b.disabled=true);
+  const index = currentStage * 15 + currentQuestion;
+  const item = questions[index];
+  const buttons = document.querySelectorAll("#options button");
 
-  const correctButton=buttons.find((b,i)=>optionOrder[i].original===correct);
+  buttons.forEach(b => b.disabled = true);
 
-  if (selected===correct) {
-    stageCorrect++;
+  if (choice === item.a) {
+    score++;
     button.classList.add("correct");
-    $("feedback").textContent="إجابة صحيحة، أحسنت!";
-    $("feedback").className="good";
+    document.getElementById("feedback").textContent = "إجابة صحيحة، أحسنت!";
   } else {
     button.classList.add("wrong");
-    if (correctButton) correctButton.classList.add("correct");
-    $("feedback").textContent="الإجابة الصحيحة: "+questions[index].o[correct];
-    $("feedback").className="bad";
+    buttons[item.a].classList.add("correct");
+    document.getElementById("feedback").textContent =
+      "الإجابة الصحيحة: " + item.o[item.a];
   }
 
-  $("nextButton").disabled=false;
+  document.getElementById("nextButton").disabled = false;
 }
 
 function nextQuestion() {
   if (!answered) return;
 
-  if (index%15===14) {
-    lastStageScore=stageCorrect;
-    passedStage=(lastStageScore/15)>=0.70;
-
-    if (passedStage) stageScores[stage]=lastStageScore;
-
+  if (currentQuestion < 14) {
+    currentQuestion++;
+    renderQuestion();
+  } else {
     showStageResult();
-    return;
   }
-
-  index++;
-  renderQuestion();
-}
-
-function speakArabic(text) {
-  if (!("speechSynthesis" in window)) return;
-
-  window.speechSynthesis.cancel();
-
-  const utterance=new SpeechSynthesisUtterance(text);
-  utterance.lang="ar-SA";
-  utterance.rate=0.85;
-  utterance.pitch=1.15;
-
-  const voices=window.speechSynthesis.getVoices();
-  const voice=voices.find(v=>v.lang && v.lang.toLowerCase().startsWith("ar"));
-  if (voice) utterance.voice=voice;
-
-  window.speechSynthesis.speak(utterance);
 }
 
 function showStageResult() {
-  $("resultTitle").textContent="نتيجة المرحلة "+(stage+1);
-  $("resultScore").textContent=
-    lastStageScore+" من 15 ("+Math.round(lastStageScore/15*100)+"%)";
+  hideAll();
+  document.getElementById("result").classList.remove("hidden");
 
-  if (passedStage) {
-    $("speechText").textContent="أحسنت، بارك الله فيك!";
-    $("resultDetails").textContent=
-      "نجحت في هذه المرحلة. واصل طريقك في حفظ كتاب الله.";
-    $("resultDetails").className="good";
-    $("resultButton").textContent=
-      stage===3?"عرض النتيجة النهائية":"المرحلة التالية";
-    speakArabic("أحسنت، بارك الله فيك");
+  const percentage = Math.round(score / 15 * 100);
+  lastPassed = percentage >= 70;
+
+  document.getElementById("resultTitle").textContent =
+    lastPassed ? "مبارك! اجتزت المرحلة" : "انتهت المرحلة";
+
+  document.getElementById("successMessage").textContent =
+    lastPassed ? "أحسنت، بارك الله فيك" : "لا تيأس، حاول مرة أخرى";
+
+  document.getElementById("resultDetails").textContent =
+    "نتيجتك: " + score + " من 15 (" + percentage + "%). " +
+    (lastPassed
+      ? "لقد حققت درجة النجاح المطلوبة."
+      : "تحتاج إلى 11 إجابة صحيحة على الأقل لاجتياز المرحلة.");
+
+  document.getElementById("mascot").textContent =
+    lastPassed ? "🧒🏻📖✨" : "📖🌱";
+
+  const btn = document.getElementById("resultButton");
+
+  if (lastPassed) {
+    savePassedStage(currentStage);
+    if (currentStage === 3) {
+      document.getElementById("resultTitle").textContent =
+        "تهانينا! أتممت المسابقة";
+      document.getElementById("successMessage").textContent =
+        "أحسنت، بارك الله فيك! 🎉";
+      document.getElementById("resultDetails").textContent =
+        "أكملت المراحل الأربع لمسابقة جزء عمّ.";
+      btn.textContent = "العودة إلى المراحل";
+    } else {
+      btn.textContent = "الانتقال إلى المرحلة التالية";
+    }
   } else {
-    $("speechText").textContent="أعد المحاولة واستمر في الحفظ.";
-    $("resultDetails").textContent=
-      "تحتاج إلى 11 إجابة صحيحة على الأقل من 15 لاجتياز المرحلة. ستعيد المرحلة نفسها.";
-    $("resultDetails").className="bad";
-    $("resultButton").textContent="إعادة المرحلة";
-    speakArabic("أعد المحاولة واستمر في الحفظ");
+    btn.textContent = "إعادة المرحلة";
   }
-
-  showScreen("result");
 }
 
-function handleResult() {
-  if (!passedStage) {
-    index=stage*15;
-    stageCorrect=0;
-    showScreen("quiz");
-    renderQuestion();
-    return;
+function resultAction() {
+  if (!lastPassed) {
+    startStage(currentStage);
+  } else if (currentStage < 3) {
+    startStage(currentStage + 1);
+  } else {
+    showStages();
   }
-
-  if (stage===3) {
-    showFinal();
-    return;
-  }
-
-  stage++;
-  index=stage*15;
-  stageCorrect=0;
-  showScreen("quiz");
-  renderQuestion();
 }
 
-function showFinal() {
-  const total=stageScores.reduce((sum,score)=>sum+(score||0),0);
-  $("finalScore").textContent=total+" من 60 ("+Math.round(total/60*100)+"%)";
-  $("finalMessage").textContent=
-    "أتممت المراحل الأربع بنجاح. بارك الله فيك، ونسأل الله أن يجعل القرآن ربيع قلبك.";
-  showScreen("final");
-  speakArabic("مبارك. أتممت مسابقة جزء عم. بارك الله فيك");
+/* تحقق احتياطي حتى لا تعمل المسابقة إذا تغير عدد الأسئلة */
+if (questions.length !== 60) {
+  document.body.innerHTML =
+    "<h2>خطأ في عدد الأسئلة: يجب أن يكون العدد 60.</h2>";
+} else {
+  showHome();
 }
-
-if ("speechSynthesis" in window) {
-  window.speechSynthesis.getVoices();
-}
-
-/* فحص أساسي: يجب أن يكون عدد الأسئلة 60، وثلاثة خيارات لكل سؤال. */
-console.assert(questions.length===60,"يجب أن يكون عدد الأسئلة 60");
-console.assert(questions.every(q=>q.o.length===3),"يجب أن يكون لكل سؤال ثلاثة خيارات");
 </script>
 </body>
 </html>
